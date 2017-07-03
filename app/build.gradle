@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'realm-android'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -25,10 +25,26 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
+
+    //appcompat
+    compile "com.android.support:appcompat-v7:$appcompat_version"
+    compile "com.android.support:design:$appcompat_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //date handler
+    compile "com.github.hotchemi:khronos:$khronos_version"
+
+    //dagger
+    compile "com.google.dagger:dagger:$dagger_version"
+    //junit
     testCompile 'junit:junit:4.12'
+
+    //realm
+    compile 'com.github.vicpinm:krealmextensions:1.0.9'
+
+    //kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
 }
 repositories {
     mavenCentral()
