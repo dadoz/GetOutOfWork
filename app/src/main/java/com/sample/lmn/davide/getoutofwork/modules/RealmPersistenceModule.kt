@@ -1,5 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.modules
 
+import android.content.Context
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import dagger.Module
 import dagger.Provides
@@ -11,8 +12,13 @@ import javax.inject.Singleton
  */
 @Singleton
 @Module
-class RealmPersistenceModule {
-    val realm : Realm = Realm.getDefaultInstance()
+class RealmPersistenceModule(applicationContext: Context) {
+    val realm : Realm
+
+    init {
+        Realm.init(applicationContext)
+        realm = Realm.getDefaultInstance()
+    }
 
     @Provides
     fun provideRealmPersistenceManager() : RealmPersistenceManager {

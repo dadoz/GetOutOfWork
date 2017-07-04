@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
-import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.modules.RealmPersistenceModule
@@ -17,10 +16,6 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     val connection: LocalServiceConnection = LocalServiceConnection()
-    val component :TimeSchedulePersistenceComponent = DaggerTimeSchedulePersistenceComponent
-            .builder()
-            .realmPersistenceModule(RealmPersistenceModule())
-            .build()
 
     @Inject
     lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
@@ -30,6 +25,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         setContentView(R.layout.activity_main)
 
         //inject component dagger
+        val component :TimeSchedulePersistenceComponent = DaggerTimeSchedulePersistenceComponent
+                .builder()
+                .realmPersistenceModule(RealmPersistenceModule(applicationContext))
+                .build()
         component.inject(this)
 
         //bind service
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     }
 
     private fun onInitView() {
-        
+        timeSchedulePersistenceManager.findTodayTimeSchedule()
     }
 
     /**
