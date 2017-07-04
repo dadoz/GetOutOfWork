@@ -14,9 +14,10 @@ import android.os.IBinder
  */
 
 class RealTimeBackgroundService: Service() {
-    val alarmManager :AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    val intent: Intent = Intent(this, AlarmReceiver::class.java)
-    val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+    lateinit var alarmManager :AlarmManager
+    lateinit var intent: Intent
+    lateinit var pendingIntent: PendingIntent
+
     override fun onBind(p0: Intent?): IBinder = LocalBinder()
 
     class LocalBinder: Binder() {
@@ -31,7 +32,9 @@ class RealTimeBackgroundService: Service() {
 
     override fun onCreate() {
         println("Service bind and started")
-
+        alarmManager = getSystemService(android.content.Context.ALARM_SERVICE) as android.app.AlarmManager
+        intent = Intent(this, AlarmReceiver::class.java)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
     }
 
     class AlarmReceiver: BroadcastReceiver() {

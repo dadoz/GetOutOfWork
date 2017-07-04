@@ -7,22 +7,45 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
+import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
+import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.modules.RealmPersistenceModule
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
-    val serviceIntent : Intent = Intent(this, RealTimeBackgroundService::class.java)
     val connection: LocalServiceConnection = LocalServiceConnection()
+    val component :TimeSchedulePersistenceComponent = DaggerTimeSchedulePersistenceComponent
+            .builder()
+            .realmPersistenceModule(RealmPersistenceModule())
+            .build()
+
+    @Inject
+    lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+
+        //inject component dagger
+        component.inject(this)
+
+        //bind service
+        bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
+                Context.BIND_AUTO_CREATE)
+
+        onInitView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unbindService(connection)
+    }
+
+    private fun onInitView() {
+        
     }
 
     /**

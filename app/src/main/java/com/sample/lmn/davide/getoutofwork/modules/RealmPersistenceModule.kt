@@ -1,11 +1,9 @@
 package com.sample.lmn.davide.getoutofwork.modules
 
-import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
-import com.vicpin.krealmextensions.queryFirst
+import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
-import java.util.*
 import javax.inject.Singleton
 
 /**
@@ -14,10 +12,10 @@ import javax.inject.Singleton
 @Singleton
 @Module
 class RealmPersistenceModule {
-    val realm = Realm.getDefaultInstance()
+    val realm : Realm = Realm.getDefaultInstance()
 
     @Provides
-    fun provideTodayTimeSchedule() : TimeSchedule? {
-        return TimeSchedule().queryFirst { query -> query.equalTo("data", Date())}
+    fun provideRealmPersistenceManager() : RealmPersistenceManager {
+        return RealmPersistenceManager(realm)
     }
 }
