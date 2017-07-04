@@ -5,12 +5,10 @@ import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
-import javax.inject.Singleton
 
 /**
  * Created by davide-syn on 7/3/17.
  */
-@Singleton
 @Module
 class RealmPersistenceModule(applicationContext: Context) {
     val realm : Realm

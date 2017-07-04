@@ -8,9 +8,9 @@ import java.util.*
  */
 open class TimeSchedule : RealmObject() {
     var id: Long = -1
-    lateinit var date: Date
-    lateinit var checkInDateAm: Date
-    lateinit var checkOutDateAm: Date
-    lateinit var checkInDatePm: Date
-    lateinit var checkOutDatePm: Date
+    var date: Date? = null
+    var checkInDateAm: Date? = null
+    var checkOutDateAm: Date? = null
+    var checkInDatePm: Date? = null
+    var checkOutDatePm: Date? = null
 }

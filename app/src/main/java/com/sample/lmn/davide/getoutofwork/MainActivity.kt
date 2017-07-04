@@ -7,25 +7,41 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.modules.RealmPersistenceModule
+import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
-    val connection: LocalServiceConnection = LocalServiceConnection()
 
-    @Inject
-    lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
+    val connection: LocalServiceConnection = LocalServiceConnection()
+    lateinit var presenter: TimeScheduleRegisterPresenter
+
+    @Inject lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        onInit()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
+    }
+
+    /**
+     * init view
+     */
+    private fun onInit() {
         //inject component dagger
-        val component :TimeSchedulePersistenceComponent = DaggerTimeSchedulePersistenceComponent
+        component = DaggerTimeSchedulePersistenceComponent
                 .builder()
                 .realmPersistenceModule(RealmPersistenceModule(applicationContext))
                 .build()
@@ -35,16 +51,32 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
                 Context.BIND_AUTO_CREATE)
 
-        onInitView()
+        presenter = TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
+        presenter.setCheckInCheckOut()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unbindService(connection)
+    override fun setUICheckInAm(date: Date) {
+        //set time
+        //change color or image
     }
 
-    private fun onInitView() {
-        timeSchedulePersistenceManager.findTodayTimeSchedule()
+    override fun setUICheckOutAm(date: Date) {
+        //set time
+        //change color or image
+    }
+
+    override fun setUICheckInPm(date: Date) {
+        //set time
+        //change color or image
+    }
+
+    override fun setUICheckOutPm(date: Date) {
+        //set time
+        //change color or image
+    }
+
+    companion object {
+        lateinit var component : TimeSchedulePersistenceComponent
     }
 
     /**
