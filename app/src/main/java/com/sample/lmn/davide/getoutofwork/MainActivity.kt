@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
     private fun onInitView() {
         checkInCardViewId.setOnClickListener {
-            presenter.setCheckInCheckOutAm()
+            presenter.setCheckInAm()
         }
         checkOutCardViewId.setOnClickListener {
-            presenter.setCheckInCheckOutPm()
+            presenter.setCheckInPm()
         }
     }
 

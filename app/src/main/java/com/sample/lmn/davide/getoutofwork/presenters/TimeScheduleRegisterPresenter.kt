@@ -1,6 +1,7 @@
 package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.TimeDateEnum
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.TimeDateEnum.AM
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.TimeDateEnum.PM
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
@@ -12,6 +13,7 @@ import java.util.*
  */
 
 class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val persistenceManager: RealmPersistenceManager) {
+    //TODO config responsabilityChain
 
     init {
         persistenceManager.initTodayTimeSchedule()
@@ -19,29 +21,75 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
     }
 
     /**
-     * check in
+     * cehck in am
      */
-    fun setCheckInCheckOutAm() {
-        if (persistenceManager.isCheckedInToday(AM)) {
-            val checkInDate: Date? = persistenceManager.checkInTodayTimeSchedule(AM)
-            view.setUICheckInPm(checkInDate?: Date())
+    fun setCheckInAm() {
+        if (setCheckInDate(AM)) {
+            setCheckOutAm()
         }
+    }
 
-        //TODO check if already out ->
-        val checkInDate: Date? = persistenceManager.checkOutTodayTimeSchedule(AM)
+    /**
+     * cehck in am
+     */
+    fun setCheckInPm() {
+        if (setCheckInDate(PM)) {
+            setCheckOutPm()
+        }
+    }
+
+    /**
+     * cehck in am
+     */
+    fun setCheckOutAm() {
+        if (!setCheckOutDate(AM)) {
+            showError()
+        }
+    }
+
+    /**
+     * cehck in am
+     */
+    fun setCheckOutPm() {
+        if (!setCheckOutDate(PM)) {
+            showError()
+        }
+    }
+
+    /**
+     * cehck in am
+     */
+    fun setCheckOutDate(timeDate: TimeDateEnum): Boolean {
+        if (persistenceManager.isCheckedOutToday(timeDate)) {
+            return false
+        }
+        val checkDate: Date? = persistenceManager.checkOutTodayTimeSchedule(timeDate)
+        view.setUICheckInPm(checkDate?: Date())
+        return true
+    }
+
+    /**
+     * cehck in am
+     */
+    fun setCheckInDate(timeDate: TimeDateEnum): Boolean {
+        if (persistenceManager.isCheckedInToday(timeDate)) {
+            return false
+        }
+        val checkInDate: Date? = persistenceManager.checkInTodayTimeSchedule(timeDate)
         view.setUICheckInPm(checkInDate?: Date())
+        return true
+    }
+
+    /**
+     * cehck in am
+     */
+    private fun showError() {
     }
 
     /**
      * check out
      */
     fun setCheckInCheckOutPm() {
-        if (persistenceManager.isCheckedInToday(PM)) {
-            val checkInDatePm: Date? = persistenceManager.checkInTodayTimeSchedule(PM)
-            view.setUICheckInPm(checkInDatePm?: Date())
-            return
-        }
-
         //TODO check if already out ->
         val checkInDatePm: Date? = persistenceManager.checkOutTodayTimeSchedule(PM)
         view.setUICheckOutPm(checkInDatePm?: Date())
