@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
@@ -20,7 +19,6 @@ import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
-
     val connection: LocalServiceConnection = LocalServiceConnection()
     lateinit var presenter: TimeScheduleRegisterPresenter
 
@@ -60,40 +58,32 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     }
 
     private fun onInitView() {
-        checkInCardViewId.setOnClickListener {
-            presenter.setCheckInAm()
-        }
-        checkOutCardViewId.setOnClickListener {
-            presenter.setCheckInPm()
-        }
+        tagCardviewAmId.setOnClickListener { presenter.setCheckInAm() }
+        tagCardviewPmId.setOnClickListener { presenter.setCheckInPm() }
     }
 
     override fun setUICheckInAm(date: Date) {
         //set time
-        checkInCardViewId.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_amber_400))
+        tagCardviewAmId.setBackgroundColorByRes(R.color.md_amber_400)
         //change color or image
-        checkInDateAmTextId.text = date.toString()
+        tagCardviewAmId.setCheckInDate(date)
     }
 
     override fun setUICheckOutAm(date: Date) {
         //set time
-        checkInCardViewId.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_brown_400))
+        tagCardviewAmId.setBackgroundColorByRes(R.color.md_brown_400)
         //change color or image
-        checkOutDateAmTextId.text = date.toString()
+        tagCardviewAmId.setCheckOutDate(date)
     }
 
     override fun setUICheckInPm(date: Date) {
-        //set time
-        //change color or image
-        checkOutCardViewId.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_teal_400))
-        checkInDatePmTextId.text = date.toString()
+        tagCardviewPmId.setBackgroundColorByRes(R.color.md_teal_400)
+        tagCardviewPmId.setCheckInDate(date)
     }
 
     override fun setUICheckOutPm(date: Date) {
-        //set time
-        //change color or image
-        checkOutCardViewId.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_pink_400))
-        checkOutDatePmTextId.text = date.toString()
+        tagCardviewPmId.setBackgroundColorByRes(R.color.md_pink_400)
+        tagCardviewPmId.setCheckOutDate(date)
     }
 
     companion object {

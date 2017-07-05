@@ -3,6 +3,7 @@ package com.sample.lmn.davide.getoutofwork.managers
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import io.realm.Realm
 import khronos.Dates
+import khronos.beginningOfDay
 import java.util.*
 import javax.inject.Singleton
 
@@ -46,7 +47,7 @@ class RealmPersistenceManager(val realm: Realm) {
      */
     fun getTodayTimeSchedule(): TimeSchedule? {
         try {
-            return realm.where(TimeSchedule::class.java).between("date", Dates.yesterday, Dates.tomorrow).findFirst()
+            return realm.where(TimeSchedule::class.java).between("date", Dates.today.beginningOfDay, Dates.tomorrow).findFirst()
         } catch (e: Exception) {
             e.printStackTrace()
             return null

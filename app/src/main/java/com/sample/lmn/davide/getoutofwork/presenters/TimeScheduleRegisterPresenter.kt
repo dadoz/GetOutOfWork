@@ -42,7 +42,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
      * cehck in am
      */
     fun setCheckOutAm() {
-        if (!setCheckOutDate(AM)) {
+        if (setCheckOutDate(AM)) {
             showError()
         }
     }
@@ -51,7 +51,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
      * cehck in am
      */
     fun setCheckOutPm() {
-        if (!setCheckOutDate(PM)) {
+        if (setCheckOutDate(PM)) {
             showError()
         }
     }
@@ -64,7 +64,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
             return false
         }
         val checkDate: Date? = persistenceManager.checkOutTodayTimeSchedule(timeDate)
-        view.setUICheckInPm(checkDate?: Date())
+        view.setUICheckOutPm(checkDate?: Date())
         return true
     }
 
