@@ -19,4 +19,8 @@ public class TimeSchedulPresenterEspressoTest {
     @Test
     public void sampleTest() {
     }
+    @Test
+    public void setCheckInTest() {
+//        setCheckInAm.
+    }
 }

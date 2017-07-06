@@ -12,7 +12,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class RealmPersistenceManager(val realm: Realm) {
-    enum class TimeDateEnum {
+    enum class DateTimeEnum {
         AM, PM,
     }
     /**
@@ -58,14 +58,14 @@ class RealmPersistenceManager(val realm: Realm) {
      * TODO make test
      *
      */
-    fun checkInTodayTimeSchedule(timeDate :TimeDateEnum): Date? {
+    fun checkInTodayTimeSchedule(dateTime :DateTimeEnum): Date? {
         try {
             val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
             val checkDate = Date()
             realm.executeTransaction {
-                if (timeDate == TimeDateEnum.AM)
+                if (dateTime == DateTimeEnum.AM)
                     timeSchedule?.checkInDateAm = checkDate
-                if (timeDate == TimeDateEnum.PM)
+                if (dateTime == DateTimeEnum.PM)
                     timeSchedule?.checkInDateAm = checkDate
             }
 
@@ -79,14 +79,14 @@ class RealmPersistenceManager(val realm: Realm) {
     /**
      * TODO make test
      */
-    fun checkOutTodayTimeSchedule(timeDate :TimeDateEnum): Date? {
+    fun checkOutTodayTimeSchedule(dateTime :DateTimeEnum): Date? {
         try {
             val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
             val checkDate = Date()
             realm.executeTransaction {
-                if (timeDate == TimeDateEnum.AM)
+                if (dateTime == DateTimeEnum.AM)
                     timeSchedule?.checkOutDateAm = Date()
-                if (timeDate == TimeDateEnum.PM)
+                if (dateTime == DateTimeEnum.PM)
                     timeSchedule?.checkOutDateAm = Date()
             }
             return checkDate
@@ -99,26 +99,26 @@ class RealmPersistenceManager(val realm: Realm) {
     /**
      * TODO add a test
      */
-    fun isCheckedInToday(timeDate: TimeDateEnum): Boolean {
+    fun isCheckedInToday(dateTime: DateTimeEnum): Boolean {
         val timeSchedule = getTodayTimeSchedule()
 
-        if (timeDate == TimeDateEnum.AM)
+        if (dateTime == DateTimeEnum.AM)
             return timeSchedule?.checkInDateAm != null
 
-        if (timeDate == TimeDateEnum.PM)
+        if (dateTime == DateTimeEnum.PM)
             return timeSchedule?.checkInDatePm != null
         return false
     }
     /**
      * TODO add a test
      */
-    fun isCheckedOutToday(timeDate: TimeDateEnum): Boolean {
+    fun isCheckedOutToday(dateTime: DateTimeEnum): Boolean {
         val timeSchedule = getTodayTimeSchedule()
 
-        if (timeDate == TimeDateEnum.AM)
+        if (dateTime == DateTimeEnum.AM)
             return timeSchedule?.checkOutDateAm != null
 
-        if (timeDate == TimeDateEnum.PM)
+        if (dateTime == DateTimeEnum.PM)
             return timeSchedule?.checkOutDatePm != null
         return false
     }

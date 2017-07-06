@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
@@ -19,6 +20,7 @@ import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
+
     val connection: LocalServiceConnection = LocalServiceConnection()
     lateinit var presenter: TimeScheduleRegisterPresenter
 
@@ -86,6 +88,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         tagCardviewPmId.setCheckOutDate(date)
     }
 
+    override fun showErrorUI(dateTime: RealmPersistenceManager.DateTimeEnum) {
+        Snackbar.make(mainViewLayoutId, "Hey error on checking $dateTime", Snackbar.LENGTH_SHORT).show()
+    }
+
     companion object {
         lateinit var component : TimeSchedulePersistenceComponent
     }
@@ -104,5 +110,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
+
+
 
 }

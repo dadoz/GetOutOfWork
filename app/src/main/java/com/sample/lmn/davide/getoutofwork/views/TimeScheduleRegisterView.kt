@@ -1,5 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.views
 
+import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import java.util.*
 
 /**
@@ -10,5 +11,6 @@ interface TimeScheduleRegisterView {
     fun setUICheckOutAm(date: Date)
     fun setUICheckInPm(date: Date)
     fun setUICheckOutPm(date: Date)
+    fun showErrorUI(dateTime: RealmPersistenceManager.DateTimeEnum)
 
 }
