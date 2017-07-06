@@ -1,9 +1,8 @@
 package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
-import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.DateTimeEnum
-import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.DateTimeEnum.AM
-import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager.DateTimeEnum.PM
+import java.util.Calendar.AM
+import java.util.Calendar.PM
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
 import khronos.with
@@ -85,7 +84,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
     /**
      * cehck in am
      */
-    fun setCheckOutDate(dateTime: DateTimeEnum): Date? {
+    fun setCheckOutDate(dateTime: Int): Date? {
         return if (persistenceManager.isCheckedOutToday(dateTime)) null else
             persistenceManager.checkOutTodayTimeSchedule(dateTime)
     }
@@ -93,7 +92,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
     /**
      * cehck in am
      */
-    fun setCheckInDate(dateTime: DateTimeEnum): Date? {
+    fun setCheckInDate(dateTime: Int): Date? {
         return if (persistenceManager.isCheckedInToday(dateTime)) null else
             persistenceManager.checkInTodayTimeSchedule(dateTime)
     }
@@ -101,7 +100,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
     /**
      * cehck in am
      */
-    private fun showError(dateTime: DateTimeEnum) {
+    private fun showError(dateTime: Int) {
         view.showErrorUI(dateTime)
     }
 

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GetOutOfWork</string>
     <string name="check">CHECK</string>
+    <string name="generic_error">Oh Snap! Error on check</string>
 </resources>

@@ -5,6 +5,8 @@ import io.realm.Realm
 import khronos.Dates
 import khronos.beginningOfDay
 import java.util.*
+import java.util.Calendar.AM
+import java.util.Calendar.PM
 import javax.inject.Singleton
 
 /**
@@ -12,9 +14,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class RealmPersistenceManager(val realm: Realm) {
-    enum class DateTimeEnum {
-        AM, PM,
-    }
     /**
      * TODO add test
      */
@@ -58,15 +57,15 @@ class RealmPersistenceManager(val realm: Realm) {
      * TODO make test
      *
      */
-    fun checkInTodayTimeSchedule(dateTime :DateTimeEnum): Date? {
+    fun checkInTodayTimeSchedule(dateTime :Int): Date? {
         try {
             val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
             val checkDate = Date()
             realm.executeTransaction {
-                if (dateTime == DateTimeEnum.AM)
+                if (dateTime == AM)
                     timeSchedule?.checkInDateAm = checkDate
-                if (dateTime == DateTimeEnum.PM)
-                    timeSchedule?.checkInDateAm = checkDate
+                if (dateTime == PM)
+                    timeSchedule?.checkInDatePm = checkDate
             }
 
             return checkDate
@@ -79,15 +78,15 @@ class RealmPersistenceManager(val realm: Realm) {
     /**
      * TODO make test
      */
-    fun checkOutTodayTimeSchedule(dateTime :DateTimeEnum): Date? {
+    fun checkOutTodayTimeSchedule(dateTime: Int): Date? {
         try {
             val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
             val checkDate = Date()
             realm.executeTransaction {
-                if (dateTime == DateTimeEnum.AM)
+                if (dateTime == AM)
                     timeSchedule?.checkOutDateAm = Date()
-                if (dateTime == DateTimeEnum.PM)
-                    timeSchedule?.checkOutDateAm = Date()
+                if (dateTime == PM)
+                    timeSchedule?.checkOutDatePm = Date()
             }
             return checkDate
         } catch (e: Exception) {
@@ -99,26 +98,26 @@ class RealmPersistenceManager(val realm: Realm) {
     /**
      * TODO add a test
      */
-    fun isCheckedInToday(dateTime: DateTimeEnum): Boolean {
+    fun isCheckedInToday(dateTime: Int): Boolean {
         val timeSchedule = getTodayTimeSchedule()
 
-        if (dateTime == DateTimeEnum.AM)
+        if (dateTime == AM)
             return timeSchedule?.checkInDateAm != null
 
-        if (dateTime == DateTimeEnum.PM)
+        if (dateTime == PM)
             return timeSchedule?.checkInDatePm != null
         return false
     }
     /**
      * TODO add a test
      */
-    fun isCheckedOutToday(dateTime: DateTimeEnum): Boolean {
+    fun isCheckedOutToday(dateTime: Int): Boolean {
         val timeSchedule = getTodayTimeSchedule()
 
-        if (dateTime == DateTimeEnum.AM)
+        if (dateTime == AM)
             return timeSchedule?.checkOutDateAm != null
 
-        if (dateTime == DateTimeEnum.PM)
+        if (dateTime == PM)
             return timeSchedule?.checkOutDatePm != null
         return false
     }

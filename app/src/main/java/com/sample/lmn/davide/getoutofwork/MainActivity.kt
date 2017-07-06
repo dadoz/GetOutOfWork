@@ -88,8 +88,8 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         tagCardviewPmId.setCheckOutDate(date)
     }
 
-    override fun showErrorUI(dateTime: RealmPersistenceManager.DateTimeEnum) {
-        Snackbar.make(mainViewLayoutId, "Hey error on checking $dateTime", Snackbar.LENGTH_SHORT).show()
+    override fun showErrorUI(dateTime: Int) {
+        Snackbar.make(mainViewLayoutId, getString(R.string.generic_error) + dateTime, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
