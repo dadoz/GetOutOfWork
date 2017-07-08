@@ -20,17 +20,31 @@ import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
-
     val connection: LocalServiceConnection = LocalServiceConnection()
-    lateinit var presenter: TimeScheduleRegisterPresenter
+
+    val component : TimeSchedulePersistenceComponent by lazy {
+        DaggerTimeSchedulePersistenceComponent
+                .builder()
+                .realmPersistenceModule(RealmPersistenceModule(applicationContext))
+                .build()
+    }
+
+    val presenter: TimeScheduleRegisterPresenter by lazy {
+        TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
+    }
 
     @Inject lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //init component
-        onInit()
+
+        //inject component dagger
+        component.inject(this)
+
+        //bind service
+        bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
+                Context.BIND_AUTO_CREATE)
 
         //init view
         onInitView()
@@ -44,60 +58,57 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      * init view
      */
-    private fun onInit() {
-        //inject component dagger
-        component = DaggerTimeSchedulePersistenceComponent
-                .builder()
-                .realmPersistenceModule(RealmPersistenceModule(applicationContext))
-                .build()
-        component.inject(this)
-
-        //bind service
-        bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
-                Context.BIND_AUTO_CREATE)
-
-        presenter = TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
-    }
-
     private fun onInitView() {
-        tagCardviewAmId.setOnClickListener { presenter.setCheckInAm() }
-        tagCardviewPmId.setOnClickListener { presenter.setCheckInPm() }
-    }
+        //TODO to be removed
+        dateTimeLabelId.text = if (TimeScheduleRegisterPresenter.isNowAm()) "Morning" else "Afternoon"
 
-    override fun setUICheckInAm(date: Date) {
-        //set time
-        tagCardviewAmId.setBackgroundColorByRes(R.color.md_amber_400)
-        //change color or image
-        tagCardviewAmId.setCheckInDate(date)
-    }
-
-    override fun setUICheckOutAm(date: Date) {
-        //set time
-        tagCardviewAmId.setBackgroundColorByRes(R.color.md_brown_400)
-        //change color or image
-        tagCardviewAmId.setCheckOutDate(date)
-    }
-
-    override fun setUICheckInPm(date: Date) {
-        tagCardviewPmId.setBackgroundColorByRes(R.color.md_teal_400)
-        tagCardviewPmId.setCheckInDate(date)
-    }
-
-    override fun setUICheckOutPm(date: Date) {
-        tagCardviewPmId.setBackgroundColorByRes(R.color.md_pink_400)
-        tagCardviewPmId.setCheckOutDate(date)
-    }
-
-    override fun showErrorUI(dateTime: Int) {
-        Snackbar.make(mainViewLayoutId, getString(R.string.generic_error) + dateTime, Snackbar.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        lateinit var component : TimeSchedulePersistenceComponent
+        presenter.initView()
+        historyCheckCardviewId.showIfAm()
+        checkInCardviewId.setOnClickListener { presenter.setCheckIn() }
+        checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
     }
 
     /**
-     *
+     * set ui
+     */
+    override fun setUICheckInAm(date: Date) {
+        checkInCardviewId.setCheckDate(date, R.color.md_amber_400)
+        historyCheckCardviewId.setCheckIn(date)
+    }
+
+    /**
+     * set ui
+     */
+    override fun setUICheckOutAm(date: Date) {
+        checkOutCardviewId.setCheckDate(date, R.color.md_brown_400)
+        historyCheckCardviewId.setCheckOut(date)
+    }
+
+    /**
+     * set ui
+     */
+    override fun setUICheckInPm(date: Date) {
+        checkInCardviewId.setCheckDate(date, R.color.md_teal_400)
+    }
+
+    /**
+     * set ui
+     */
+    override fun setUICheckOutPm(date: Date) {
+        checkOutCardviewId.setCheckDate(date, R.color.md_pink_400)
+    }
+
+    /**
+     * set ui
+     */
+    override fun showErrorUI(dateTime: Int) {
+        Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
+                "${TimeScheduleRegisterPresenter.isNowAm()} - $dateTime", Snackbar.LENGTH_SHORT).show()
+    }
+
+
+    /**
+     * service connection to handle change background depending on time
      */
     class LocalServiceConnection: ServiceConnection {
         lateinit var localService: RealTimeBackgroundService
@@ -110,7 +121,4 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
-
-
-
 }
