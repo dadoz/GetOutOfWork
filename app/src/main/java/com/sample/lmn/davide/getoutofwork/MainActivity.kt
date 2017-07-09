@@ -1,5 +1,4 @@
 package com.sample.lmn.davide.getoutofwork
-
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,6 +12,7 @@ import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComp
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.modules.RealmPersistenceModule
 import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
+import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,10 +60,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     private fun onInitView() {
         //TODO to be removed
-        dateTimeLabelId.text = if (TimeScheduleRegisterPresenter.isNowAm()) "Morning" else "Afternoon"
+        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
 
         presenter.initView()
-        historyCheckCardviewId.showIfAm()
+        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
         checkInCardviewId.setOnClickListener { presenter.setCheckIn() }
         checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
     }
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun showErrorUI(dateTime: Int) {
         Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
-                "${TimeScheduleRegisterPresenter.isNowAm()} - $dateTime", Snackbar.LENGTH_SHORT).show()
+                " $dateTime", Snackbar.LENGTH_SHORT).show()
     }
 
 

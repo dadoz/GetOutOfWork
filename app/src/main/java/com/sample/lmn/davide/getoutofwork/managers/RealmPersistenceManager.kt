@@ -2,8 +2,7 @@ package com.sample.lmn.davide.getoutofwork.managers
 
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import io.realm.Realm
-import khronos.Dates
-import khronos.beginningOfDay
+import khronos.*
 import java.util.*
 import java.util.Calendar.AM
 import java.util.Calendar.PM
@@ -17,40 +16,30 @@ class RealmPersistenceManager(val realm: Realm) {
     /**
      * TODO add test
      */
-    fun initTodayTimeSchedule() {
-        if (getTodayTimeSchedule() == null)
-            createTodayTimeSchedule()
-    }
+    fun initTodayTimeSchedule(): TimeSchedule  = getTodayTimeSchedule()
 
     /**
      * TODO add test
      */
-    fun findTimeSchedule(date: Date) :TimeSchedule{
-        return realm.where(TimeSchedule::class.java).equalTo("date", date).findFirst()
-    }
+    fun findTimeSchedule(date: Date): TimeSchedule = realm.where(TimeSchedule::class.java)
+            .equalTo("date", date).findFirst()
 
     /**
      * TODO add a test
      */
-    fun createTodayTimeSchedule() {
-        realm.executeTransaction {
-            realm ->
-                with(realm.createObject(TimeSchedule::class.java), {
-                    date = Date()
-                })
-        }
+    fun createTodayTimeSchedule(): TimeSchedule {
+        realm.executeTransaction { realm ->
+            with(realm.createObject(TimeSchedule::class.java), { date = Date() }) }
+        return getTodayTimeSchedule()
     }
 
     /**
      * TODO create a test
      */
-    fun getTodayTimeSchedule(): TimeSchedule? {
-        try {
-            return realm.where(TimeSchedule::class.java).between("date", Dates.today.beginningOfDay, Dates.tomorrow).findFirst()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        }
+    fun getTodayTimeSchedule(): TimeSchedule {
+        return realm.where(TimeSchedule::class.java)
+                .between("date", Dates.today.beginningOfDay, Dates.today.endOfDay)
+                .findFirst()?: createTodayTimeSchedule()
     }
 
     /**
@@ -102,10 +91,10 @@ class RealmPersistenceManager(val realm: Realm) {
         val timeSchedule = getTodayTimeSchedule()
 
         if (dateTime == AM)
-            return timeSchedule?.checkInDateAm != null
+            return timeSchedule.checkInDateAm != null
 
         if (dateTime == PM)
-            return timeSchedule?.checkInDatePm != null
+            return timeSchedule.checkInDatePm != null
         return false
     }
     /**
@@ -115,10 +104,25 @@ class RealmPersistenceManager(val realm: Realm) {
         val timeSchedule = getTodayTimeSchedule()
 
         if (dateTime == AM)
-            return timeSchedule?.checkOutDateAm != null
+            return timeSchedule.checkOutDateAm != null
 
         if (dateTime == PM)
-            return timeSchedule?.checkOutDatePm != null
+            return timeSchedule.checkOutDatePm != null
         return false
+    }
+
+    fun calculateClockOutDate(): Date {
+        return with(getTodayTimeSchedule(), {
+            if (checkInDateAm != null)
+                checkInDateAm as Date + 8.hours + 1.hour //take launch time
+            else if (checkOutDateAm != null)
+                checkInDateAm as Date + 4.hours
+            else if (checkInDatePm != null)
+                checkInDatePm as Date + 4.hours
+            else if (checkOutDatePm != null)
+                checkOutDatePm as Date
+            else
+                Date()
+        })
     }
 }

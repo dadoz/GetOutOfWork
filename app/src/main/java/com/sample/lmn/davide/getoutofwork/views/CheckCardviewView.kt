@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.View
 import com.sample.lmn.davide.getoutofwork.R
+import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
 import kotlinx.android.synthetic.main.check_cardview_layout.view.*
 import java.util.*
 
@@ -28,7 +29,7 @@ class CheckCardviewView : CardView {
     fun setBackgroundColorByRes(color: Int) { setBackgroundColor(ContextCompat.getColor(context, color)) }
 
     fun setCheckDate(date: Date, color: Int) {
-        checkDateTextId.text = date.toString()
+        checkDateTextId.text = date.italianFormat()
         setBackgroundColorByRes(color)
     }
 }

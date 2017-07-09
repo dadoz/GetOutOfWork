@@ -1,18 +1,27 @@
 package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
-import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import khronos.toString
 import khronos.with
 import java.util.*
 import java.util.Calendar.AM
 import java.util.Calendar.PM
+/**
+ * extensions
+ */
+fun Date.isAm(): Boolean = this.before(this.with(hour = 12))
+
+fun Date.isPm(): Boolean = this.equals(this.with(hour = 12)) || this.after(this.with(hour = 12))
+
+fun Date.italianFormat(): String = this.toString("HH:mm dd MMM")
 
 /**
  * Created by davide-syn on 7/3/17.
  */
 
-class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val persistenceManager: RealmPersistenceManager) {
+class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
+                                    val persistenceManager: RealmPersistenceManager) {
     //TODO config responsabilityChain
 
     init {
@@ -113,17 +122,14 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
     /**
      * cehck in am
      */
-    private fun showError(dateTime: Int) {
-        view.showErrorUI(dateTime)
-    }
+    private fun showError(dateTime: Int)  = view.showErrorUI(dateTime)
 
     /**
      * init view
      */
     fun initView() {
-        val timeSchedule: TimeSchedule? = persistenceManager.getTodayTimeSchedule()
-        if (timeSchedule != null)
-            with(timeSchedule, {
+        try {
+            with(persistenceManager.getTodayTimeSchedule(), {
                 if (checkInDateAm != null)
                     view.setUICheckInAm(checkInDateAm!!)
 
@@ -136,31 +142,12 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView, val pers
                 if (checkOutDatePm != null)
                     view.setUICheckOutPm(checkOutDatePm!!)
             })
+        } catch (e: Exception) {
+            showError(AM)
+        }
     }
 
-    /**
-     *
-     */
-    companion object {
-        fun isNowAm(): Boolean {
-            return Date().isAm()
-        }
-        fun isNowPM(): Boolean {
-            return Date().isPm()
-        }
-        /**
-         * extension
-         */
-        fun Date.isAm(): Boolean{
-            return this.before(this.with(hour = 12))
-        }
 
-        fun Date.isPm(): Boolean{
-            return this.equals(this.with(hour = 12)) or
-                    this.after(this.with(hour = 12))
-        }
-
-    }
-
+    fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
 
 }

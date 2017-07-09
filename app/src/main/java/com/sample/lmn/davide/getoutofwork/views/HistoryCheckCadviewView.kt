@@ -6,7 +6,7 @@ import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.View
 import com.sample.lmn.davide.getoutofwork.R
-import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
+import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
 import kotlinx.android.synthetic.main.history_check_cardview_layout.view.*
 import java.util.*
 
@@ -25,14 +25,14 @@ class HistoryCheckCadviewView : CardView {
         View.inflate(context, R.layout.history_check_cardview_layout, this)
     }
 
-    fun showIfAm() {
-        visibility = if (TimeScheduleRegisterPresenter.isNowAm()) VISIBLE else GONE
-    }
-
     fun setCheckIn(date: Date) {
-        historyCheckInDateTextId.text = date.toString()
+        historyCheckInDateTextId.text = date.italianFormat()
     }
     fun setCheckOut(date: Date) {
-        historyCheckOutDateTextId.text = date.toString()
+        historyCheckOutDateTextId.text = date.italianFormat()
+    }
+
+    fun setClockOutTime(clockOutDate: Date) {
+        clockOutDateTextId.text = clockOutDate.italianFormat()
     }
 }
