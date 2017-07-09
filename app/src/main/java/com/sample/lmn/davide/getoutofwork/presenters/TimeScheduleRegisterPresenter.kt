@@ -108,7 +108,8 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * cehck in am
      */
     fun setCheckOutDate(dateTime: Int): Date? {
-        return if (persistenceManager.isCheckedOutToday(dateTime)) null else
+        return if (!persistenceManager.isCheckedInToday(dateTime) or
+                persistenceManager.isCheckedOutToday(dateTime)) null else
             persistenceManager.checkOutTodayTimeSchedule(dateTime)
     }
 
