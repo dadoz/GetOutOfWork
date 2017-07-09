@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:textColor="@color/colorAccent"
         android:layout_centerVertical="true"
         android:text="CLOCK out time"/>
 
@@ -17,13 +18,11 @@
         android:layout_alignParentRight="true"
         android:id="@+id/historyCheckInDateTextId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dskasfldkfalsdklfa"/>
+        android:layout_height="wrap_content"/>
     <TextView
         android:layout_below="@id/historyCheckInDateTextId"
         android:layout_alignParentRight="true"
         android:id="@+id/historyCheckOutDateTextId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dskasfldkfalsdklfa"/>
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

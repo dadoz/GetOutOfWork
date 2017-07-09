@@ -111,16 +111,19 @@ class RealmPersistenceManager(val realm: Realm) {
         return false
     }
 
+    /**
+     * TODO add a test
+     */
     fun calculateClockOutDate(): Date {
         return with(getTodayTimeSchedule(), {
-            if (checkInDateAm != null)
-                checkInDateAm as Date + 8.hours + 1.hour //take launch time
-            else if (checkOutDateAm != null)
-                checkInDateAm as Date + 4.hours
+            if (checkOutDatePm != null)
+                checkOutDatePm as Date
             else if (checkInDatePm != null)
                 checkInDatePm as Date + 4.hours
-            else if (checkOutDatePm != null)
-                checkOutDatePm as Date
+            else if (checkOutDateAm != null)
+                checkInDateAm as Date + 4.hours
+            else if (checkInDateAm != null)
+                checkInDateAm as Date + 8.hours + 1.hour //take launch time
             else
                 Date()
         })

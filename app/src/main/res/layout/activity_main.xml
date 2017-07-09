@@ -20,7 +20,9 @@
         android:id="@+id/historyCheckCardviewId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_16" />
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16" />
     <com.sample.lmn.davide.getoutofwork.views.CheckCardviewView
         android:id="@+id/checkInCardviewId"
         android:layout_weight="2"

@@ -1,6 +1,7 @@
 package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
 import khronos.toString
 import khronos.with
@@ -149,5 +150,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
 
 
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
+
+    fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
 
 }

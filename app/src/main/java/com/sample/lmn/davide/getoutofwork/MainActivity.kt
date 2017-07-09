@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
 
         presenter.initView()
-        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
+        historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
         checkInCardviewId.setOnClickListener { presenter.setCheckIn() }
         checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
     }
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set ui
      */
     override fun setUICheckInAm(date: Date) {
+        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
         checkInCardviewId.setCheckDate(date, R.color.md_amber_400)
         historyCheckCardviewId.setCheckIn(date)
     }
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set ui
      */
     override fun setUICheckOutAm(date: Date) {
+        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
         checkOutCardviewId.setCheckDate(date, R.color.md_brown_400)
         historyCheckCardviewId.setCheckOut(date)
     }
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set ui
      */
     override fun setUICheckInPm(date: Date) {
+        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
         checkInCardviewId.setCheckDate(date, R.color.md_teal_400)
     }
 
@@ -95,6 +99,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set ui
      */
     override fun setUICheckOutPm(date: Date) {
+        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
         checkOutCardviewId.setCheckDate(date, R.color.md_pink_400)
     }
 
@@ -102,8 +107,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set ui
      */
     override fun showErrorUI(dateTime: Int) {
-        Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
-                " $dateTime", Snackbar.LENGTH_SHORT).show()
+        val snackbar = Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
+                " $dateTime", Snackbar.LENGTH_SHORT)
+        snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_red_400))
+        snackbar.show()
     }
 
 

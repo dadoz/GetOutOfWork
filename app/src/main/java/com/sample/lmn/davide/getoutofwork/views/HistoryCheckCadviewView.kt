@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.View
 import com.sample.lmn.davide.getoutofwork.R
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
 import kotlinx.android.synthetic.main.history_check_cardview_layout.view.*
 import java.util.*
@@ -34,5 +35,15 @@ class HistoryCheckCadviewView : CardView {
 
     fun setClockOutTime(clockOutDate: Date) {
         clockOutDateTextId.text = clockOutDate.italianFormat()
+    }
+
+    fun setClockAm(today: TimeSchedule) {
+        historyCheckInDateTextId.text = today.checkInDateAm?.italianFormat()?: context.getString(R.string.no_clock_am)
+        historyCheckOutDateTextId.text = today.checkOutDateAm?.italianFormat()?: context.getString(R.string.no_clock_am)
+    }
+
+    fun init(clockOutDate: Date, clockToday: TimeSchedule) {
+        setClockOutTime(clockOutDate)
+        setClockAm(clockToday)
     }
 }
