@@ -15,18 +15,17 @@ import java.util.*
  */
 
 class TagCardviewView : FrameLayout {
+    init {
+        View.inflate(context, R.layout.tag_cardview_layout, this)
+    }
     constructor(context: Context) : super(context) {}
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
 
     constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
-    init {
-        View.inflate(context, R.layout.tag_cardview_layout, this)
-    }
-
     fun setBackgroundColorByRes(color: Int) { checkCardviewId.setBackgroundColor(ContextCompat.getColor(context, color)) }
-    fun setCheckInDate(date :Date) { checkInDateTextId.text = date.toString() }
 
-    fun setCheckOutDate(date :Date) { checkOutDateTextId.text = date.toString() }
+    fun setCheckDate(date :Date) { checkDateTextId.text = date.toString() }
+
 }

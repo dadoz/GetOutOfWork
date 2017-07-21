@@ -1,5 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.managers
 
+import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import io.realm.Realm
 import khronos.Dates
@@ -7,13 +8,29 @@ import khronos.beginningOfDay
 import java.util.*
 import java.util.Calendar.AM
 import java.util.Calendar.PM
-import javax.inject.Singleton
 
 /**
  * Created by davide-syn on 7/4/17.
  */
-@Singleton
-class RealmPersistenceManager(val realm: Realm) {
+class RealmPersistenceManager(val applicationContext: Context) {
+    val realm: Realm by lazy {
+        Realm.init(applicationContext)
+        Realm.getDefaultInstance()
+    }
+
+    /**
+     * companion obj
+     */
+    object Holder {
+        lateinit var instance: RealmPersistenceManager
+
+        operator fun invoke(context: Context): Holder {
+            instance = RealmPersistenceManager(applicationContext = context)
+            return this
+        }
+    }
+
+
     /**
      * TODO add test
      */
@@ -35,9 +52,9 @@ class RealmPersistenceManager(val realm: Realm) {
     fun createTodayTimeSchedule() {
         realm.executeTransaction {
             realm ->
-                with(realm.createObject(TimeSchedule::class.java), {
-                    date = Date()
-                })
+            with(realm.createObject(TimeSchedule::class.java), {
+                date = Date()
+            })
         }
     }
 
@@ -121,4 +138,5 @@ class RealmPersistenceManager(val realm: Realm) {
             return timeSchedule?.checkOutDatePm != null
         return false
     }
+
 }

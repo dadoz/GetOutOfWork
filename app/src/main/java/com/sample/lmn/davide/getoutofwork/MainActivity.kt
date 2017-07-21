@@ -8,27 +8,25 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import com.sample.lmn.davide.getoutofwork.components.DaggerTimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
-import com.sample.lmn.davide.getoutofwork.modules.RealmPersistenceModule
 import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
     val connection: LocalServiceConnection = LocalServiceConnection()
     lateinit var presenter: TimeScheduleRegisterPresenter
 
-    @Inject lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
+    lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         //init component
         onInit()
 
@@ -45,47 +43,44 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * init view
      */
     private fun onInit() {
-        //inject component dagger
-        component = DaggerTimeSchedulePersistenceComponent
-                .builder()
-                .realmPersistenceModule(RealmPersistenceModule(applicationContext))
-                .build()
-        component.inject(this)
-
         //bind service
         bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
                 Context.BIND_AUTO_CREATE)
 
+        timeSchedulePersistenceManager = RealmPersistenceManager.Holder(applicationContext).instance
+
         presenter = TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
     }
 
+    /**
+     *
+     */
     private fun onInitView() {
         tagCardviewAmId.setOnClickListener { presenter.setCheckInAm() }
         tagCardviewPmId.setOnClickListener { presenter.setCheckInPm() }
     }
 
+    /**
+     *
+     */
     override fun setUICheckInAm(date: Date) {
-        //set time
         tagCardviewAmId.setBackgroundColorByRes(R.color.md_amber_400)
-        //change color or image
-        tagCardviewAmId.setCheckInDate(date)
+//        tagCardviewAmId.setCheckInDate(date)
     }
 
     override fun setUICheckOutAm(date: Date) {
-        //set time
         tagCardviewAmId.setBackgroundColorByRes(R.color.md_brown_400)
-        //change color or image
-        tagCardviewAmId.setCheckOutDate(date)
+//        tagCardviewAmId.setCheckOutDate(date)
     }
 
     override fun setUICheckInPm(date: Date) {
         tagCardviewPmId.setBackgroundColorByRes(R.color.md_teal_400)
-        tagCardviewPmId.setCheckInDate(date)
+//        tagCardviewPmId.setCheckInDate(date)
     }
 
     override fun setUICheckOutPm(date: Date) {
         tagCardviewPmId.setBackgroundColorByRes(R.color.md_pink_400)
-        tagCardviewPmId.setCheckOutDate(date)
+//        tagCardviewPmId.setCheckOutDate(date)
     }
 
     override fun showErrorUI(dateTime: Int) {
@@ -93,8 +88,8 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     }
 
     companion object {
-        lateinit var component : TimeSchedulePersistenceComponent
-    }
+    lateinit var component : TimeSchedulePersistenceComponent
+}
 
     /**
      *
@@ -110,7 +105,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
-
-
-
 }
+
+
+
