@@ -16,6 +16,7 @@ fun Date.isAm(): Boolean = this.before(this.with(hour = 12))
 fun Date.isPm(): Boolean = this.equals(this.with(hour = 12)) || this.after(this.with(hour = 12))
 
 fun Date.italianFormat(): String = this.toString("HH:mm dd MMM")
+fun Date.timeFormat(): String = this.toString("HH:mm")
 
 /**
  * Created by davide-syn on 7/3/17.
@@ -132,16 +133,16 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun initView() {
         try {
             with(persistenceManager.getTodayTimeSchedule(), {
-                if (checkInDateAm != null)
+                if (checkInDateAm != null && Date().isAm())
                     view.setUICheckInAm(checkInDateAm!!)
 
-                if (checkOutDateAm != null)
+                if (checkOutDateAm != null && Date().isAm())
                     view.setUICheckOutAm(checkOutDateAm!!)
 
-                if (checkInDatePm != null)
+                if (checkInDatePm != null && Date().isPm())
                     view.setUICheckInPm(checkInDatePm!!)
 
-                if (checkOutDatePm != null)
+                if (checkOutDatePm != null && Date().isPm())
                     view.setUICheckOutPm(checkOutDatePm!!)
             })
         } catch (e: Exception) {
