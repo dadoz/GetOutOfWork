@@ -10,14 +10,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text=" - "
+        android:text=" - not checked"
         android:textColor="@color/colorPrimary"/>
     <TextView
         android:id="@+id/checkButtonStatusTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textSize="18sp"
-        android:text="check"
+        android:layout_marginTop="@dimen/margin_8"
+        android:textSize="12sp"
+        android:text="please tap to check your entrance or exit"
         android:textColor="@color/md_blue_grey_800"/>
 </LinearLayout>

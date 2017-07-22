@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun setUICheckOutAm(date: Date) {
         historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkOutCardviewId.setCheckDate(date, R.color.md_brown_400)
+        checkOutCardviewId.setCheckDate(date, R.color.md_amber_400)
         historyCheckCardviewId.setCheckOut(date)
     }
 
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun setUICheckInPm(date: Date) {
         historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkInCardviewId.setCheckDate(date, R.color.md_teal_400)
+        checkInCardviewId.setCheckDate(date, R.color.material_blue_grey_800)
     }
 
     /**
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun setUICheckOutPm(date: Date) {
         historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkOutCardviewId.setCheckDate(date, R.color.md_pink_400)
+        checkOutCardviewId.setCheckDate(date, R.color.material_blue_grey_800)
     }
 
     /**

@@ -137,11 +137,8 @@ class RealmPersistenceManager(val applicationContext: Context) {
             if (checkOutDatePm != null)
                 checkOutDatePm as Date
             else if (checkInDatePm != null) {
-                val diff: Duration = if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
-                println((checkInDateAm as Date).diffHours(checkOutDateAm))
-                checkInDatePm as Date + (8.hours) - diff
+                checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
             } else if (checkOutDateAm != null) {
-                println((checkInDateAm as Date).diffHours(checkOutDateAm).ago)
                 checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
             } else if (checkInDateAm != null)
                 checkInDateAm as Date + 8.hours + 1.hour //take launch time
