@@ -11,5 +11,6 @@ interface TimeScheduleRegisterView {
     fun setUICheckInPm(date: Date)
     fun setUICheckOutPm(date: Date)
     fun showErrorUI(dateTime: Int)
+    fun hideCheckOutButton()
 
 }

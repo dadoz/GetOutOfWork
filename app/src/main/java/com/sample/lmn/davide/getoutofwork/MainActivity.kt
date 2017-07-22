@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import com.sample.lmn.davide.getoutofwork.components.TimeSchedulePersistenceComponent
+import android.view.View
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
 import com.sample.lmn.davide.getoutofwork.presenters.isAm
@@ -109,6 +109,11 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_red_400))
         snackbar.show()
     }
+
+    override fun hideCheckOutButton() {
+        checkOutCardviewId.visibility = View.GONE
+    }
+
 
     /**
      * service connection to handle change background depending on time

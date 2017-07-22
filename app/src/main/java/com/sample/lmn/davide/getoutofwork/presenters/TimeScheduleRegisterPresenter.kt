@@ -3,6 +3,7 @@ package com.sample.lmn.davide.getoutofwork.presenters
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import khronos.Duration
 import khronos.toString
 import khronos.with
 import java.util.*
@@ -17,6 +18,10 @@ fun Date.isPm(): Boolean = this.equals(this.with(hour = 12)) || this.after(this.
 
 fun Date.italianFormat(): String = this.toString("HH:mm dd MMM")
 fun Date.timeFormat(): String = this.toString("HH:mm")
+fun Date.diffHours(date: Date?): Duration {
+    val diff : Int = if (date != null) ((date.time - this.time) / (1000 * 60 * 60)).toInt() else 0
+    return Duration(Calendar.HOUR_OF_DAY, diff + 1)
+}
 
 /**
  * Created by davide-syn on 7/3/17.
@@ -131,6 +136,9 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * init view
      */
     fun initView() {
+        if (Date().isPm())
+            view.hideCheckOutButton()
+
         try {
             with(persistenceManager.getTodayTimeSchedule(), {
                 if (checkInDateAm != null && Date().isAm())
@@ -154,5 +162,6 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
 
     fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
+
 
 }

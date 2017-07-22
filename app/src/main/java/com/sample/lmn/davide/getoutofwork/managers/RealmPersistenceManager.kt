@@ -2,6 +2,7 @@ package com.sample.lmn.davide.getoutofwork.managers
 
 import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
+import com.sample.lmn.davide.getoutofwork.presenters.diffHours
 import io.realm.Realm
 import khronos.*
 import java.util.*
@@ -135,14 +136,18 @@ class RealmPersistenceManager(val applicationContext: Context) {
         return with(getTodayTimeSchedule(), {
             if (checkOutDatePm != null)
                 checkOutDatePm as Date
-            else if (checkInDatePm != null)
-                checkInDatePm as Date + 4.hours
-            else if (checkOutDateAm != null)
-                checkInDateAm as Date + 4.hours
-            else if (checkInDateAm != null)
+            else if (checkInDatePm != null) {
+                val diff: Duration = if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
+                println((checkInDateAm as Date).diffHours(checkOutDateAm))
+                checkInDatePm as Date + (8.hours) - diff
+            } else if (checkOutDateAm != null) {
+                println((checkInDateAm as Date).diffHours(checkOutDateAm).ago)
+                checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
+            } else if (checkInDateAm != null)
                 checkInDateAm as Date + 8.hours + 1.hour //take launch time
             else
                 Date()
         })
     }
 }
+
