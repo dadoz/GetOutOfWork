@@ -24,18 +24,24 @@
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginRight="@dimen/margin_16" />
     <com.sample.lmn.davide.getoutofwork.views.CheckCardviewView
-        android:id="@+id/checkInCardviewId"
+        android:id="@+id/checkCardviewId"
         android:layout_weight="2"
         android:layout_margin="@dimen/margin_16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <com.sample.lmn.davide.getoutofwork.views.CheckCardviewView
-        android:id="@+id/checkOutCardviewId"
-        android:layout_marginLeft="@dimen/margin_16"
-        android:layout_marginRight="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_16"
-        android:layout_weight="2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <!--<com.sample.lmn.davide.getoutofwork.views.CheckCardviewView-->
+        <!--android:id="@+id/checkInCardviewId"-->
+        <!--android:layout_weight="2"-->
+        <!--android:layout_margin="@dimen/margin_16"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
+    <!--<com.sample.lmn.davide.getoutofwork.views.CheckCardviewView-->
+        <!--android:id="@+id/checkOutCardviewId"-->
+        <!--android:layout_marginLeft="@dimen/margin_16"-->
+        <!--android:layout_marginRight="@dimen/margin_16"-->
+        <!--android:layout_marginBottom="@dimen/margin_16"-->
+        <!--android:layout_weight="2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
 
 </LinearLayout>

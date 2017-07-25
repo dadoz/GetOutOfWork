@@ -8,8 +8,8 @@ import android.os.IBinder
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.presenters.OutInEnum
 import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
 import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
+
     val connection: LocalServiceConnection = LocalServiceConnection()
 
     val presenter: TimeScheduleRegisterPresenter by lazy {
@@ -62,42 +63,26 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
         presenter.initView()
         historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-        checkInCardviewId.setOnClickListener { presenter.setCheckIn() }
-        checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
+        checkCardviewId.setOnClickListener { view ->  presenter.setCheck() }
+//        checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
     }
 
     /**
-     * set ui
+     *
      */
-    override fun setUICheckInAm(date: Date) {
-        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkInCardviewId.setCheckDate(date, R.color.md_amber_400)
-        historyCheckCardviewId.setCheckIn(date)
+    override fun updateCheckCardview(date: Date, check: OutInEnum, dateTime: Int) {
+        if (check == OutInEnum.IN && dateTime == Calendar.AM)
+            checkCardviewId.setInAmLayout()
+        if (check == OutInEnum.IN && dateTime == Calendar.AM)
+            checkCardviewId.setOutAmLayout()
+        if (check == OutInEnum.IN && dateTime == Calendar.AM)
+            checkCardviewId.setInPmLayout()
+        if (check == OutInEnum.IN && dateTime == Calendar.AM)
+            checkCardviewId.setOutPmLayout()
     }
 
-    /**
-     * set ui
-     */
-    override fun setUICheckOutAm(date: Date) {
-        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkOutCardviewId.setCheckDate(date, R.color.md_amber_400)
-        historyCheckCardviewId.setCheckOut(date)
-    }
-
-    /**
-     * set ui
-     */
-    override fun setUICheckInPm(date: Date) {
-        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkInCardviewId.setCheckDate(date, R.color.material_blue_grey_800)
-    }
-
-    /**
-     * set ui
-     */
-    override fun setUICheckOutPm(date: Date) {
-        historyCheckCardviewId.setClockOutTime(presenter.getClockOutDate())
-        checkOutCardviewId.setCheckDate(date, R.color.material_blue_grey_800)
+    override fun setClockOutTime(date: Date) {
+        historyCheckCardviewId.setClockOutTime(date)
     }
 
     /**
@@ -109,11 +94,6 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_red_400))
         snackbar.show()
     }
-
-    override fun hideCheckOutButton() {
-        checkOutCardviewId.visibility = View.GONE
-    }
-
 
     /**
      * service connection to handle change background depending on time

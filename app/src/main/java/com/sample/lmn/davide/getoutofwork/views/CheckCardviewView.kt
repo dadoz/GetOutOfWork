@@ -32,4 +32,20 @@ class CheckCardviewView : CardView {
         checkDateTextId.text = date.italianFormat()
         setBackgroundColorByRes(color)
     }
+
+    fun setOutAmLayout() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setInAmLayout() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setInPmLayout() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setOutPmLayout() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

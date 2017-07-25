@@ -2,6 +2,7 @@ package com.sample.lmn.davide.getoutofwork.managers
 
 import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
+import com.sample.lmn.davide.getoutofwork.presenters.OutInEnum
 import com.sample.lmn.davide.getoutofwork.presenters.diffHours
 import io.realm.Realm
 import khronos.*
@@ -29,7 +30,6 @@ class RealmPersistenceManager(val applicationContext: Context) {
             return this
         }
     }
-
 
     /**
      * TODO add test
@@ -64,71 +64,63 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO make test
      *
      */
-    fun checkInTodayTimeSchedule(dateTime :Int): Date? {
-        try {
-            val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
-            val checkDate = Date()
-            realm.executeTransaction {
-                if (dateTime == AM)
-                    timeSchedule?.checkInDateAm = checkDate
-                if (dateTime == PM)
-                    timeSchedule?.checkInDatePm = checkDate
-            }
-
-            return checkDate
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        }
+    fun checkInTodayTimeSchedule(dateTime :Int): Date {
+        return executeRealmTransaction(dateTime, OutInEnum.IN)
     }
 
     /**
      * TODO make test
      */
-    fun checkOutTodayTimeSchedule(dateTime: Int): Date? {
-        try {
-            val timeSchedule :TimeSchedule? = getTodayTimeSchedule()
-            val checkDate = Date()
+    fun checkOutTodayTimeSchedule(dateTime: Int): Date {
+        return executeRealmTransaction(dateTime, OutInEnum.OUT)
+    }
+
+    private fun executeRealmTransaction(dateTime: Int, check: OutInEnum): Date {
+        with(getTodayTimeSchedule(), {
             realm.executeTransaction {
-                if (dateTime == AM)
-                    timeSchedule?.checkOutDateAm = Date()
-                if (dateTime == PM)
-                    timeSchedule?.checkOutDatePm = Date()
+                if (dateTime == AM && check == OutInEnum.IN)
+                    checkInDateAm = Date()
+                if (dateTime == AM && check == OutInEnum.OUT)
+                    checkOutDateAm = Date()
+                if (dateTime == PM && check == OutInEnum.IN)
+                    checkInDatePm = Date()
+                if (dateTime == PM && check == OutInEnum.OUT)
+                    checkOutDatePm = Date()
             }
-            return checkDate
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        }
+        })
+        return Date()
     }
 
     /**
      * TODO add a test
      */
     fun isCheckedInToday(dateTime: Int): Boolean {
-        val timeSchedule = getTodayTimeSchedule()
-
-        if (dateTime == AM)
-            return timeSchedule.checkInDateAm != null
-
-        if (dateTime == PM)
-            return timeSchedule.checkInDatePm != null
-        return false
+        return isCheckedToday(dateTime, OutInEnum.IN)
     }
+
     /**
      * TODO add a test
      */
     fun isCheckedOutToday(dateTime: Int): Boolean {
-        val timeSchedule = getTodayTimeSchedule()
-
-        if (dateTime == AM)
-            return timeSchedule.checkOutDateAm != null
-
-        if (dateTime == PM)
-            return timeSchedule.checkOutDatePm != null
-        return false
+        return isCheckedToday(dateTime, OutInEnum.OUT)
     }
 
+    /**
+     * is check today
+     */
+    fun isCheckedToday(dateTime: Int, check: OutInEnum): Boolean {
+        with(getTodayTimeSchedule(), {
+            if (dateTime == AM && check == OutInEnum.IN)
+                return checkInDateAm != null
+            if (dateTime == AM && check == OutInEnum.OUT)
+                return checkOutDateAm != null
+            if (dateTime == PM && check == OutInEnum.IN)
+                return checkOutDatePm != null
+            if (dateTime == PM && check == OutInEnum.OUT)
+                return checkOutDatePm != null
+            return false
+        })
+    }
     /**
      * TODO add a test
      */

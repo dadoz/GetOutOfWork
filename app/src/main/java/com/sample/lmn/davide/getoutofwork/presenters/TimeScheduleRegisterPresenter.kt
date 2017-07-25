@@ -7,15 +7,13 @@ import khronos.Duration
 import khronos.toString
 import khronos.with
 import java.util.*
-import java.util.Calendar.AM
-import java.util.Calendar.PM
+import kotlin.properties.Delegates
+
 /**
- * extensions
+ * Date extensions
  */
 fun Date.isAm(): Boolean = this.before(this.with(hour = 12))
-
 fun Date.isPm(): Boolean = this.equals(this.with(hour = 12)) || this.after(this.with(hour = 12))
-
 fun Date.italianFormat(): String = this.toString("HH:mm dd MMM")
 fun Date.timeFormat(): String = this.toString("HH:mm")
 fun Date.diffHours(date: Date?): Duration {
@@ -23,108 +21,49 @@ fun Date.diffHours(date: Date?): Duration {
     return Duration(Calendar.HOUR_OF_DAY, diff + 1)
 }
 
+enum class OutInEnum {
+    OUT, IN
+}
+
 /**
  * Created by davide-syn on 7/3/17.
  */
-
 class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
                                     val persistenceManager: RealmPersistenceManager) {
     //TODO config responsabilityChain
+    var out: OutInEnum = OutInEnum.IN
+    var dateTime: Int = Calendar.AM
 
     init {
         persistenceManager.initTodayTimeSchedule()
     }
 
     /**
-     *
-     */
-    fun setCheckIn() {
-        if (Date().isAm())
-            setCheckInAm()
-        if (Date().isPm())
-            setCheckInPm()
-    }
-
-    /**
-     *
-     */
-    fun setCheckOut() {
-        if (Date().isAm())
-            setCheckOutAm()
-        if (Date().isPm())
-            setCheckOutPm()
-    }
-
-
-    /**
      * cehck in am
      */
-    fun setCheckInAm() :Boolean{
-        val date: Date? = setCheckInDate(AM)
+    fun setCheck(): Boolean {
+        val date = setCheckDate(out, dateTime)
         if (date != null) {
-            view.setUICheckInAm(date)
+            view.updateCheckCardview(date, out, dateTime)
             return true
         }
 
-        return setCheckOutAm()
-    }
-
-    /**
-     * cehck in am
-     */
-    fun setCheckOutAm() :Boolean{
-        val date: Date? = setCheckOutDate(AM)
-        if (date != null) {
-            view.setUICheckOutAm(date)
-            return true
-        }
-
-        showError(AM)
+        showError(dateTime)
         return false
     }
 
     /**
      * cehck in am
      */
-    fun setCheckInPm() :Boolean{
-        val date: Date? = setCheckInDate(PM)
-        if (date != null) {
-            view.setUICheckInPm(date)
-            return true
-        }
-        showError(PM)
-        return false
-    }
+    fun setCheckDate(check: OutInEnum, dateTime: Int): Date? {
+        if (check == OutInEnum.OUT)
+            return if (!persistenceManager.isCheckedInToday(dateTime) or
+                    persistenceManager.isCheckedOutToday(dateTime)) null else
+                persistenceManager.checkOutTodayTimeSchedule(dateTime)
+        else
+            return if (persistenceManager.isCheckedInToday(dateTime)) null else
+                persistenceManager.checkInTodayTimeSchedule(dateTime)
 
-    /**
-     * cehck in am
-     */
-    fun setCheckOutPm(): Boolean {
-        val date: Date? = setCheckOutDate(PM)
-        if (date != null) {
-            view.setUICheckOutPm(date)
-            return true
-        }
-
-        showError(PM)
-        return false
-    }
-
-    /**
-     * cehck in am
-     */
-    fun setCheckOutDate(dateTime: Int): Date? {
-        return if (!persistenceManager.isCheckedInToday(dateTime) or
-                persistenceManager.isCheckedOutToday(dateTime)) null else
-            persistenceManager.checkOutTodayTimeSchedule(dateTime)
-    }
-
-    /**
-     * cehck in am
-     */
-    fun setCheckInDate(dateTime: Int): Date? {
-        return if (persistenceManager.isCheckedInToday(dateTime)) null else
-            persistenceManager.checkInTodayTimeSchedule(dateTime)
     }
 
     /**
@@ -136,32 +75,33 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * init view
      */
     fun initView() {
-        if (Date().isPm())
-            view.hideCheckOutButton()
+        val timeSchedule: TimeSchedule by Delegates
+                .observable(initialValue = persistenceManager.getTodayTimeSchedule(),
+                        onChange = {property, oldValue, newValue ->
 
-        try {
-            with(persistenceManager.getTodayTimeSchedule(), {
-                if (checkInDateAm != null && Date().isAm())
-                    view.setUICheckInAm(checkInDateAm!!)
+                            //set clock time
+                            view.setClockOutTime(getClockOutDate())
 
-                if (checkOutDateAm != null && Date().isAm())
-                    view.setUICheckOutAm(checkOutDateAm!!)
-
-                if (checkInDatePm != null && Date().isPm())
-                    view.setUICheckInPm(checkInDatePm!!)
-
-                if (checkOutDatePm != null && Date().isPm())
-                    view.setUICheckOutPm(checkOutDatePm!!)
-            })
-        } catch (e: Exception) {
-            showError(AM)
-        }
+                            //update status
+                            with(newValue, {
+                                if (checkInDateAm != null) {
+                                    out = OutInEnum.OUT
+                                    dateTime = Calendar.AM
+                                }
+                                if (checkOutDateAm != null) {
+                                    out = OutInEnum.IN
+                                    dateTime = Calendar.PM
+                                }
+                                if (checkInDatePm != null) {
+                                    out = OutInEnum.OUT
+                                    dateTime = Calendar.PM
+                                }
+                            })
+                        })
     }
-
 
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
 
     fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
-
-
 }
+
