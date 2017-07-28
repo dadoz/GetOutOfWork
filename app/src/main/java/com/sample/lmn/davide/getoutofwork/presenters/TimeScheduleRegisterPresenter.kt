@@ -111,5 +111,4 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
         dateTime = am
     }
 }
-}
 
