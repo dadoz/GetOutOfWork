@@ -21,4 +21,8 @@
         android:textSize="12sp"
         android:text="please tap to check your entrance or exit"
         android:textColor="@color/md_blue_grey_800"/>
+    <ImageView
+        android:id="@+id/checkImageViewId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

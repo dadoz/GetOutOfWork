@@ -63,8 +63,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
         presenter.initView()
         historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-        checkCardviewId.setOnClickListener { view ->  presenter.setCheck() }
-//        checkOutCardviewId.setOnClickListener { presenter.setCheckOut() }
+        checkCardviewId.setOnClickListener { presenter.setCheck() }
     }
 
     /**
@@ -72,15 +71,18 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun updateCheckCardview(date: Date, check: OutInEnum, dateTime: Int) {
         if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setInAmLayout()
+            checkCardviewId.setInAmLayout(date)
         if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setOutAmLayout()
+            checkCardviewId.setOutAmLayout(date)
         if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setInPmLayout()
+            checkCardviewId.setInPmLayout(date)
         if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setOutPmLayout()
+            checkCardviewId.setOutPmLayout(date)
     }
 
+    /**
+     * set clock out time
+     */
     override fun setClockOutTime(date: Date) {
         historyCheckCardviewId.setClockOutTime(date)
     }

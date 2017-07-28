@@ -28,24 +28,33 @@ class CheckCardviewView : CardView {
 
     fun setBackgroundColorByRes(color: Int) { setBackgroundColor(ContextCompat.getColor(context, color)) }
 
-    fun setCheckDate(date: Date, color: Int) {
+//    fun setCheckDate(, color: Int) {
+//        checkDateTextId.text = date.italianFormat()
+//        setBackgroundColorByRes(color)
+//    }
+
+    fun setOutAmLayout(date: Date) {
+        setCardLayout(date, R.drawable.character)
+    }
+
+    fun setInAmLayout(date: Date) {
+        setCardLayout(date, R.drawable.character)
+    }
+
+    fun setInPmLayout(date: Date) {
+        setCardLayout(date, R.drawable.character)
+    }
+
+    fun setOutPmLayout(date: Date) {
+        setCardLayout(date, R.drawable.character)
+    }
+
+    /**
+     *
+     */
+    private fun setCardLayout(date: Date, resourceDrawableId : Int) {
         checkDateTextId.text = date.italianFormat()
-        setBackgroundColorByRes(color)
-    }
-
-    fun setOutAmLayout() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun setInAmLayout() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun setInPmLayout() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun setOutPmLayout() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
+        setBackgroundColorByRes(R.color.colorAccent)
     }
 }
