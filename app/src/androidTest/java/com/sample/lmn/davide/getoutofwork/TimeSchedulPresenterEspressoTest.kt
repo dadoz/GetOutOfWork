@@ -52,23 +52,26 @@ class TimeSchedulPresenterEspressoTest {
     @Test
     fun testCheckEmptySnackbar() {
         //find snackbar with that text
-        onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
-                .check(matches(isDisplayed()))
+        onViewErrorSnackbar(activityTestRule.activity.getString(R.string.generic_error) + AM).check(matches(isDisplayed()))
     }
 
     @Test
     fun testCheckIn() {
-        presenter.setCheck()
+        activityTestRule.runOnUiThread {
+            presenter.setCheck()
+        }
         //find snackbar with that text
-        onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
-                .check(matches(isDisplayed()))
+        onViewErrorSnackbar(activityTestRule.activity.getString(R.string.generic_error) + AM).check(matches(isDisplayed()))
+
     }
     @Test
     fun testCheckOut() {
-        presenter.setCheckAndDateTime(OutInEnum.OUT, AM)
-        presenter.setCheck()
+        activityTestRule.runOnUiThread {
+            presenter.setCheckAndDateTime(OutInEnum.OUT, AM)
+            presenter.setCheck()
+        }
         //find snackbar with that text
-        onViewErrorSnackbar().check(matches(isDisplayed()))
+        onViewErrorSnackbar(activityTestRule.activity.getString(R.string.generic_error) + PM).check(matches(isDisplayed()))
     }
 
     @Test
@@ -100,8 +103,8 @@ class TimeSchedulPresenterEspressoTest {
         }
     }
 
-    private fun onViewErrorSnackbar(): ViewInteraction {
-        return onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
+    private fun onViewErrorSnackbar(text: String): ViewInteraction {
+        return onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(text)))
     }
-    
+
 }
