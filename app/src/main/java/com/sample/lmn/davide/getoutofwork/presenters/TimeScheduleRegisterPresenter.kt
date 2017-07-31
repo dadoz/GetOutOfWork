@@ -54,9 +54,18 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * cehck in am
      */
     fun validSetCheckDate(check: OutInEnum, dateTime: Int): Boolean {
-        return when (check) {
-            OutInEnum.OUT -> !persistenceManager.isCheckedInToday(dateTime) or persistenceManager.isCheckedOutToday(dateTime)
-            OutInEnum.IN -> persistenceManager.isCheckedInToday(dateTime)
+        return when (dateTime) {
+            Calendar.AM -> when (check) {
+                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.AM)
+                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.AM) and !persistenceManager.isCheckedOutToday(Calendar.AM)
+            }
+            Calendar.PM -> when (check) {
+                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.PM) or persistenceManager.isCheckedOutToday(Calendar.AM)
+                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.PM) and !persistenceManager.isCheckedOutToday(Calendar.PM)
+            }
+            else -> {
+                return false
+            }
         }
     }
 
