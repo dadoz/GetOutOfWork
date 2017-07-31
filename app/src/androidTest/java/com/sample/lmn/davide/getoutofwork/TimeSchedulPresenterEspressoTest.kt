@@ -49,30 +49,26 @@ class TimeSchedulPresenterEspressoTest {
         })
     }
 
-//    @Test
+    @Test
     fun testCheckEmptySnackbar() {
         //find snackbar with that text
         onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
                 .check(matches(isDisplayed()))
     }
 
-//    @Test
+    @Test
     fun testCheckIn() {
         presenter.setCheck()
         //find snackbar with that text
         onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
                 .check(matches(isDisplayed()))
     }
-//    @Test
+    @Test
     fun testCheckOut() {
         presenter.setCheckAndDateTime(OutInEnum.OUT, AM)
         presenter.setCheck()
         //find snackbar with that text
         onViewErrorSnackbar().check(matches(isDisplayed()))
-    }
-
-    private fun onViewErrorSnackbar(): ViewInteraction {
-        return onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
     }
 
     @Test
@@ -103,4 +99,9 @@ class TimeSchedulPresenterEspressoTest {
             assertEquals(presenter.validSetCheckDate(OutInEnum.IN, PM), true)
         }
     }
+
+    private fun onViewErrorSnackbar(): ViewInteraction {
+        return onView(allOf<View>(withId(android.support.design.R.id.snackbar_text), withText(activityTestRule.activity.getString(R.string.generic_error) + AM)))
+    }
+    
 }
