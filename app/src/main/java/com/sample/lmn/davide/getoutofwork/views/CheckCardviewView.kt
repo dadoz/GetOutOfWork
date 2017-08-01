@@ -54,7 +54,7 @@ class CheckCardviewView : CardView {
      */
     private fun setCardLayout(date: Date, resourceDrawableId : Int) {
         checkDateTextId.text = date.italianFormat()
-        checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
-        setBackgroundColorByRes(R.color.colorAccent)
+//        checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
+        setBackgroundColorByRes(R.color.md_blue_grey_800)
     }
 }

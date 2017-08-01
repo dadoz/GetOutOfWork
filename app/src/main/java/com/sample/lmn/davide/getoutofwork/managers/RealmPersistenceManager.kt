@@ -64,19 +64,19 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO make test
      *
      */
-    fun checkInTodayTimeSchedule(dateTime :Int): Date {
+    fun checkInTodayTimeSchedule(dateTime :Int): TimeSchedule {
         return executeRealmTransaction(dateTime, OutInEnum.IN)
     }
 
     /**
      * TODO make test
      */
-    fun checkOutTodayTimeSchedule(dateTime: Int): Date {
+    fun checkOutTodayTimeSchedule(dateTime: Int): TimeSchedule {
         return executeRealmTransaction(dateTime, OutInEnum.OUT)
     }
 
-    private fun executeRealmTransaction(dateTime: Int, check: OutInEnum): Date {
-        with(getTodayTimeSchedule(), {
+    private fun executeRealmTransaction(dateTime: Int, check: OutInEnum): TimeSchedule {
+        return with(getTodayTimeSchedule(), {
             realm.executeTransaction {
                 if (dateTime == AM && check == OutInEnum.IN)
                     checkInDateAm = Date()
@@ -87,8 +87,8 @@ class RealmPersistenceManager(val applicationContext: Context) {
                 if (dateTime == PM && check == OutInEnum.OUT)
                     checkOutDatePm = Date()
             }
+            return this
         })
-        return Date()
     }
 
     /**

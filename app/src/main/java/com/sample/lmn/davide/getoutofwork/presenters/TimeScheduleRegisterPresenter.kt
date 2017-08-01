@@ -21,6 +21,9 @@ fun Date.diffHours(date: Date?): Duration {
     return Duration(Calendar.HOUR_OF_DAY, diff + 1)
 }
 
+/**
+ * in and out enum
+ */
 enum class OutInEnum {
     OUT, IN
 }
@@ -42,12 +45,12 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * cehck in am
      */
     fun setCheck() {
-        if (!validSetCheckDate(check, dateTime)) {
+        if (!validSetCheckDate(check, dateTime) ) {
             return showError(dateTime)
         }
 
-        val date: Date = setCheckDate(check, dateTime)
-        return view.updateCheckCardview(date, check, dateTime)
+        val date: Date = setCheckDate(check, dateTime) ?: return showError(dateTime)
+        view.updateCheckCardview(date, check, dateTime)
     }
 
     /**
@@ -72,49 +75,59 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     /**
      *
      */
-    fun setCheckDate(check: OutInEnum, dateTime: Int): Date {
-        return when (check) {
+    fun setCheckDate(check: OutInEnum, dateTime: Int): Date? {
+        //trigger observable
+        timeSchedule = when (check) {
             OutInEnum.OUT -> persistenceManager.checkOutTodayTimeSchedule(dateTime)
             OutInEnum.IN -> persistenceManager.checkInTodayTimeSchedule(dateTime)
         }
+
+        return timeSchedule.checkInDateAm
     }
     /**
      * cehck in am
      */
     private fun showError(dateTime: Int)  = view.showErrorUI(dateTime)
 
+    var timeSchedule: TimeSchedule by Delegates.observable(initialValue = persistenceManager.getTodayTimeSchedule(), onChange = {
+        property, oldValue, newValue -> onUpdateTimeSchedule(newValue)
+    })
     /**
      * init view
      */
     fun initView() {
-        val timeSchedule: TimeSchedule by Delegates
-                .observable(initialValue = persistenceManager.getTodayTimeSchedule(),
-                        onChange = {property, oldValue, newValue ->
+        timeSchedule = persistenceManager.getTodayTimeSchedule()
+    }
 
-                            //set clock time
-                            view.setClockOutTime(getClockOutDate())
+    /**
+     * on update tiem schedule
+     */
+    fun onUpdateTimeSchedule(newValue: TimeSchedule) {
+        //set clock time
+        view.setClockOutTime(getClockOutDate())
+        view.updateCheckCardview(timeSchedule.checkInDateAm?:Date(), check, dateTime)
+        //update status
+        with(newValue, {
+            if (checkInDateAm != null) {
+                check = OutInEnum.OUT
+                dateTime = Calendar.AM
+            }
+            if (checkOutDateAm != null) {
+                check = OutInEnum.IN
+                dateTime = Calendar.PM
+            }
+            if (checkInDatePm != null) {
+                check = OutInEnum.OUT
+                dateTime = Calendar.PM
+            }
+        })
 
-                            //update status
-                            with(newValue, {
-                                if (checkInDateAm != null) {
-                                    check = OutInEnum.OUT
-                                    dateTime = Calendar.AM
-                                }
-                                if (checkOutDateAm != null) {
-                                    check = OutInEnum.IN
-                                    dateTime = Calendar.PM
-                                }
-                                if (checkInDatePm != null) {
-                                    check = OutInEnum.OUT
-                                    dateTime = Calendar.PM
-                                }
-                            })
-                        })
     }
 
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
 
     fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
+
     fun setCheckAndDateTime(out: OutInEnum, am: Int) {
         check = out
         dateTime = am
