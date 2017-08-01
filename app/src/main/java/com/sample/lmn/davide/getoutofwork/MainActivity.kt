@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      *
      */
-    override fun updateCheckCardview(date: Date?, check: OutInEnum, dateTime: Int) {
+    override fun updateCheckCardview(date: Date, check: OutInEnum, dateTime: Int) {
         if (check == OutInEnum.IN && dateTime == Calendar.AM)
             checkCardviewId.setInAmLayout(date)
         if (check == OutInEnum.IN && dateTime == Calendar.AM)

@@ -76,7 +76,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
     }
 
     private fun executeRealmTransaction(dateTime: Int, check: OutInEnum): TimeSchedule {
-        return with(getTodayTimeSchedule(), {
+        with(getTodayTimeSchedule(), {
             realm.executeTransaction {
                 if (dateTime == AM && check == OutInEnum.IN)
                     checkInDateAm = Date()

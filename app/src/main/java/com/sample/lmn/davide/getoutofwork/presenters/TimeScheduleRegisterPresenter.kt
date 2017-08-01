@@ -45,11 +45,11 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      * cehck in am
      */
     fun setCheck() {
-        if (!validSetCheckDate(check, dateTime) ) {
+        if (!validSetCheckDate(check, dateTime)) {
             return showError(dateTime)
         }
 
-        val date: Date = setCheckDate(check, dateTime) ?: return showError(dateTime)
+        val date: Date = setCheckDate(check, dateTime)?: return showError(dateTime)
         view.updateCheckCardview(date, check, dateTime)
     }
 
@@ -105,7 +105,8 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun onUpdateTimeSchedule(newValue: TimeSchedule) {
         //set clock time
         view.setClockOutTime(getClockOutDate())
-        view.updateCheckCardview(timeSchedule.checkInDateAm?:Date(), check, dateTime)
+        if (timeSchedule.checkInDateAm != null)
+            view.updateCheckCardview(timeSchedule.checkInDateAm as Date, check, dateTime)
         //update status
         with(newValue, {
             if (checkInDateAm != null) {
