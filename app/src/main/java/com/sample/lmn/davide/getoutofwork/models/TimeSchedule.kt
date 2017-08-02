@@ -1,7 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.models
 
 import io.realm.RealmObject
-import io.realm.annotations.Ignore
 import java.util.*
 
 /**
@@ -13,8 +12,7 @@ enum class OutInEnum {
 }
 
 open class TimeSchedule : RealmObject() {
-    @Ignore
-    var check: OutInEnum = OutInEnum.IN
+    var check: String = OutInEnum.IN.toString()
     var dateTime: Int = Calendar.AM
     var id: Long = -1
     var date: Date? = null
@@ -23,4 +21,12 @@ open class TimeSchedule : RealmObject() {
     var checkInDatePm: Date? = null
     var checkOutDatePm: Date? = null
     var currentCheckedDate: Date = Date()
+
+    fun setCheck(check: OutInEnum) {
+        this.check = check.toString()
+    }
+
+    fun getCheck(): OutInEnum {
+        return OutInEnum.valueOf(check)
+    }
 }

@@ -72,14 +72,12 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      */
     override fun updateCheckCardview(timeSchedule: TimeSchedule) {
         with(timeSchedule) {
-            if ((check == OutInEnum.IN) and (dateTime == Calendar.AM))
-                checkCardviewId.setInAmLayout(currentCheckedDate)
-            if ((check == OutInEnum.OUT) and (dateTime == Calendar.AM))
-                checkCardviewId.setOutAmLayout(currentCheckedDate)
-            if ((check == OutInEnum.IN) and (dateTime == Calendar.PM))
-                checkCardviewId.setInPmLayout(currentCheckedDate)
-            if ((check == OutInEnum.OUT) and (dateTime == Calendar.PM))
-                checkCardviewId.setOutPmLayout(currentCheckedDate)
+            when {
+                ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.AM)) -> checkCardviewId.setInAmLayout(currentCheckedDate)
+                ((getCheck() == OutInEnum.OUT) and (dateTime == Calendar.AM)) -> checkCardviewId.setOutAmLayout(currentCheckedDate)
+                ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.PM)) -> checkCardviewId.setInPmLayout(currentCheckedDate)
+                ((getCheck() == OutInEnum.OUT) and (dateTime == Calendar.PM)) -> checkCardviewId.setOutPmLayout(currentCheckedDate)
+            }
         }
     }
 

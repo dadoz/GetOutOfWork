@@ -82,7 +82,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
             realm.executeTransaction {
                 //set check time
                 val currentDate = Date()
-                this.check = check
+                this.check = check.name
                 this.dateTime = dateTime
                 this.currentCheckedDate = currentDate
                 if ((dateTime == AM) and (check == OutInEnum.IN))
@@ -154,7 +154,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
             return null
 
         with (getTodayTimeSchedule()) {
-            return when (check) {
+            return when (getCheck()) {
                 OutInEnum.OUT -> checkOutTodayTimeSchedule(dateTime)
                 OutInEnum.IN -> checkInTodayTimeSchedule(dateTime)
             }
@@ -167,11 +167,11 @@ class RealmPersistenceManager(val applicationContext: Context) {
     fun validSetCheckDate(): Boolean {
         with (getTodayTimeSchedule()) {
             return when (dateTime) {
-                Calendar.AM -> when (check) {
-                    OutInEnum.IN -> !isCheckedInToday(Calendar.AM) and Date().isAm()
+                Calendar.AM -> when (getCheck()) {
+                    OutInEnum.IN-> !isCheckedInToday(Calendar.AM) and Date().isAm()
                     OutInEnum.OUT -> isCheckedAm() and Date().isAm()
                 }
-                Calendar.PM -> when (check) {
+                Calendar.PM -> when (getCheck()) {
                     OutInEnum.IN -> isCheckedPm() and Date().isPm()
                     OutInEnum.OUT -> isCheckedPm2() and Date().isPm()
                 }
