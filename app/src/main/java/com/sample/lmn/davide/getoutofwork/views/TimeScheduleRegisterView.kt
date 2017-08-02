@@ -1,6 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.views
 
-import com.sample.lmn.davide.getoutofwork.presenters.OutInEnum
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import java.util.*
 
 /**
@@ -13,5 +13,5 @@ interface TimeScheduleRegisterView {
 //    fun setUICheckOutPm(date: Date)
     fun setClockOutTime(date: Date)
     fun showErrorUI(message: String)
-    fun updateCheckCardview(date: Date, check: OutInEnum, dateTime: Int)
+    fun updateCheckCardview(timeSchedule : TimeSchedule)
 }

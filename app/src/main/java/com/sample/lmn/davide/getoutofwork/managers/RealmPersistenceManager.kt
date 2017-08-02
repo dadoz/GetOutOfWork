@@ -1,9 +1,11 @@
 package com.sample.lmn.davide.getoutofwork.managers
 
 import android.content.Context
+import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
-import com.sample.lmn.davide.getoutofwork.presenters.OutInEnum
 import com.sample.lmn.davide.getoutofwork.presenters.diffHours
+import com.sample.lmn.davide.getoutofwork.presenters.isAm
+import com.sample.lmn.davide.getoutofwork.presenters.isPm
 import io.realm.Realm
 import khronos.*
 import java.util.*
@@ -78,14 +80,19 @@ class RealmPersistenceManager(val applicationContext: Context) {
     private fun executeRealmTransaction(dateTime: Int, check: OutInEnum): TimeSchedule {
         with(getTodayTimeSchedule(), {
             realm.executeTransaction {
-                if (dateTime == AM && check == OutInEnum.IN)
-                    checkInDateAm = Date()
-                if (dateTime == AM && check == OutInEnum.OUT)
-                    checkOutDateAm = Date()
-                if (dateTime == PM && check == OutInEnum.IN)
-                    checkInDatePm = Date()
-                if (dateTime == PM && check == OutInEnum.OUT)
-                    checkOutDatePm = Date()
+                //set check time
+                val currentDate = Date()
+                this.check = check
+                this.dateTime = dateTime
+                this.currentCheckedDate = currentDate
+                if ((dateTime == AM) and (check == OutInEnum.IN))
+                    checkInDateAm = currentDate
+                if ((dateTime == AM) and (check == OutInEnum.OUT))
+                    checkOutDateAm = currentDate
+                if ((dateTime == PM) and (check == OutInEnum.IN))
+                    checkInDatePm = currentDate
+                if ((dateTime == PM) and (check == OutInEnum.OUT))
+                    checkOutDatePm = currentDate
             }
             return this
         })
@@ -110,13 +117,13 @@ class RealmPersistenceManager(val applicationContext: Context) {
      */
     fun isCheckedToday(dateTime: Int, check: OutInEnum): Boolean {
         with(getTodayTimeSchedule(), {
-            if (dateTime == AM && check == OutInEnum.IN)
+            if ((dateTime == AM) and (check == OutInEnum.IN))
                 return checkInDateAm != null
-            if (dateTime == AM && check == OutInEnum.OUT)
+            if ((dateTime == AM) and (check == OutInEnum.OUT))
                 return checkOutDateAm != null
-            if (dateTime == PM && check == OutInEnum.IN)
+            if ((dateTime == PM) and (check == OutInEnum.IN))
                 return checkOutDatePm != null
-            if (dateTime == PM && check == OutInEnum.OUT)
+            if ((dateTime == PM) and (check == OutInEnum.OUT))
                 return checkOutDatePm != null
             return false
         })
@@ -137,6 +144,56 @@ class RealmPersistenceManager(val applicationContext: Context) {
             else
                 Date()
         })
+    }
+
+    /**
+     *
+     */
+    fun checkToday(): TimeSchedule? {
+        if (!validSetCheckDate())
+            return null
+
+        with (getTodayTimeSchedule()) {
+            return when (check) {
+                OutInEnum.OUT -> checkOutTodayTimeSchedule(dateTime)
+                OutInEnum.IN -> checkInTodayTimeSchedule(dateTime)
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    fun validSetCheckDate(): Boolean {
+        with (getTodayTimeSchedule()) {
+            return when (dateTime) {
+                Calendar.AM -> when (check) {
+                    OutInEnum.IN -> !isCheckedInToday(Calendar.AM) and Date().isAm()
+                    OutInEnum.OUT -> isCheckedAm() and Date().isAm()
+                }
+                Calendar.PM -> when (check) {
+                    OutInEnum.IN -> isCheckedPm() and Date().isPm()
+                    OutInEnum.OUT -> isCheckedPm2() and Date().isPm()
+                }
+                else -> {
+                    return false
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private fun isCheckedAm(): Boolean {
+        return isCheckedInToday(Calendar.AM) and !isCheckedOutToday(Calendar.AM)
+    }
+
+    private fun isCheckedPm(): Boolean {
+        return !isCheckedInToday(Calendar.PM) or isCheckedOutToday(Calendar.AM)
+    }
+    private fun isCheckedPm2(): Boolean {
+        return isCheckedInToday(Calendar.PM) and !isCheckedOutToday(Calendar.PM)
     }
 }
 

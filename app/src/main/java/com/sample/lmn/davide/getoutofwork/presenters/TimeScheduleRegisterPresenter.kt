@@ -1,6 +1,7 @@
 package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
 import khronos.Duration
@@ -22,71 +23,24 @@ fun Date.diffHours(date: Date?): Duration {
 }
 
 /**
- * in and out enum
- */
-enum class OutInEnum {
-    OUT, IN
-}
-
-/**
  * Created by davide-syn on 7/3/17.
  */
 class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
                                     val persistenceManager: RealmPersistenceManager) {
     //TODO config responsabilityChain
-    private var check: OutInEnum = OutInEnum.IN
-    private var dateTime: Int = Calendar.AM
 
     init {
         persistenceManager.initTodayTimeSchedule()
     }
 
     /**
-     * cehck in am
-     */
-    fun setCheck() {
-        if (!validSetCheckDate(check, dateTime)) {
-            return showError(check, dateTime)
-        }
-
-        val date: Date = setCheckDate(check, dateTime)?: return showError(check, dateTime)
-        view.updateCheckCardview(date, check, dateTime)
-    }
-
-    /**
-     * cehck in am
-     */
-    fun validSetCheckDate(check: OutInEnum, dateTime: Int): Boolean {
-        return when (dateTime) {
-            Calendar.AM -> when (check) {
-                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.AM) and Date().isAm()
-                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.AM) and
-                        !persistenceManager.isCheckedOutToday(Calendar.AM) and Date().isAm()
-            }
-            Calendar.PM -> when (check) {
-                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.PM) or
-                        persistenceManager.isCheckedOutToday(Calendar.AM) and Date().isPm()
-                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.PM) and
-                        !persistenceManager.isCheckedOutToday(Calendar.PM) and Date().isPm()
-            }
-            else -> {
-                return false
-            }
-        }
-    }
-
-    /**
      *
      */
-    fun setCheckDate(check: OutInEnum, dateTime: Int): Date? {
-        //trigger observable
-        timeSchedule = when (check) {
-            OutInEnum.OUT -> persistenceManager.checkOutTodayTimeSchedule(dateTime)
-            OutInEnum.IN -> persistenceManager.checkInTodayTimeSchedule(dateTime)
-        }
-
-        return timeSchedule.checkInDateAm
+    fun setCheck() {
+        persistenceManager.checkToday()?: showError(timeSchedule.check, timeSchedule.dateTime)
+        view.updateCheckCardview(timeSchedule)
     }
+
     /**
      * cehck in am
      */
@@ -108,33 +62,31 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun onUpdateTimeSchedule(newValue: TimeSchedule) {
         //set clock time
         view.setClockOutTime(getClockOutDate())
+
+        //update cardview
         if (timeSchedule.checkInDateAm != null)
-            view.updateCheckCardview(timeSchedule.checkInDateAm as Date, check, dateTime)
+            view.updateCheckCardview(timeSchedule)
+
         //update status
-        with(newValue, {
-            if (checkInDateAm != null) {
-                check = OutInEnum.OUT
-                dateTime = Calendar.AM
-            }
-            if (checkOutDateAm != null) {
-                check = OutInEnum.IN
-                dateTime = Calendar.PM
-            }
-            if (checkInDatePm != null) {
-                check = OutInEnum.OUT
-                dateTime = Calendar.PM
-            }
-        })
+//        with(newValue, {
+//            if (checkInDateAm != null) {
+//                check = OutInEnum.OUT
+//                dateTime = Calendar.AM
+//            }
+//            if (checkOutDateAm != null) {
+//                check = OutInEnum.IN
+//                dateTime = Calendar.PM
+//            }
+//            if (checkInDatePm != null) {
+//                check = OutInEnum.OUT
+//                dateTime = Calendar.PM
+//            }
+//        })
 
     }
 
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
 
     fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
-
-    fun setCheckAndDateTime(out: OutInEnum, am: Int) {
-        check = out
-        dateTime = am
-    }
 }
 

@@ -9,7 +9,8 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
-import com.sample.lmn.davide.getoutofwork.presenters.OutInEnum
+import com.sample.lmn.davide.getoutofwork.models.OutInEnum
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
 import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
@@ -69,15 +70,17 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      *
      */
-    override fun updateCheckCardview(date: Date, check: OutInEnum, dateTime: Int) {
-        if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setInAmLayout(date)
-        if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setOutAmLayout(date)
-        if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setInPmLayout(date)
-        if (check == OutInEnum.IN && dateTime == Calendar.AM)
-            checkCardviewId.setOutPmLayout(date)
+    override fun updateCheckCardview(timeSchedule: TimeSchedule) {
+        with(timeSchedule) {
+            if ((check == OutInEnum.IN) and (dateTime == Calendar.AM))
+                checkCardviewId.setInAmLayout(currentCheckedDate)
+            if ((check == OutInEnum.OUT) and (dateTime == Calendar.AM))
+                checkCardviewId.setOutAmLayout(currentCheckedDate)
+            if ((check == OutInEnum.IN) and (dateTime == Calendar.PM))
+                checkCardviewId.setInPmLayout(currentCheckedDate)
+            if ((check == OutInEnum.OUT) and (dateTime == Calendar.PM))
+                checkCardviewId.setOutPmLayout(currentCheckedDate)
+        }
     }
 
     /**
