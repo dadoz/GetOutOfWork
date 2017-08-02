@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      * set ui
      */
-    override fun showErrorUI(dateTime: Int) {
+    override fun showErrorUI(message: String) {
         val snackbar = Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
-                " $dateTime", Snackbar.LENGTH_SHORT)
+                message, Snackbar.LENGTH_SHORT)
         snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_red_400))
         snackbar.show()
     }

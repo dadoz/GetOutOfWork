@@ -46,10 +46,10 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      */
     fun setCheck() {
         if (!validSetCheckDate(check, dateTime)) {
-            return showError(dateTime)
+            return showError(check, dateTime)
         }
 
-        val date: Date = setCheckDate(check, dateTime)?: return showError(dateTime)
+        val date: Date = setCheckDate(check, dateTime)?: return showError(check, dateTime)
         view.updateCheckCardview(date, check, dateTime)
     }
 
@@ -59,12 +59,15 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun validSetCheckDate(check: OutInEnum, dateTime: Int): Boolean {
         return when (dateTime) {
             Calendar.AM -> when (check) {
-                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.AM)
-                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.AM) and !persistenceManager.isCheckedOutToday(Calendar.AM)
+                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.AM) and Date().isAm()
+                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.AM) and
+                        !persistenceManager.isCheckedOutToday(Calendar.AM) and Date().isAm()
             }
             Calendar.PM -> when (check) {
-                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.PM) or persistenceManager.isCheckedOutToday(Calendar.AM)
-                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.PM) and !persistenceManager.isCheckedOutToday(Calendar.PM)
+                OutInEnum.IN -> !persistenceManager.isCheckedInToday(Calendar.PM) or
+                        persistenceManager.isCheckedOutToday(Calendar.AM) and Date().isPm()
+                OutInEnum.OUT -> persistenceManager.isCheckedInToday(Calendar.PM) and
+                        !persistenceManager.isCheckedOutToday(Calendar.PM) and Date().isPm()
             }
             else -> {
                 return false
@@ -87,7 +90,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     /**
      * cehck in am
      */
-    private fun showError(dateTime: Int)  = view.showErrorUI(dateTime)
+    private fun showError(check: OutInEnum, dateTime: Int)  = view.showErrorUI(if (dateTime == Calendar.AM) "AM" else "PM" + " - ${check.name}")
 
     var timeSchedule: TimeSchedule by Delegates.observable(initialValue = persistenceManager.getTodayTimeSchedule(), onChange = {
         property, oldValue, newValue -> onUpdateTimeSchedule(newValue)
