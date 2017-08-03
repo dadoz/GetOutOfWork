@@ -12,7 +12,7 @@ enum class OutInEnum {
 }
 
 open class TimeSchedule : RealmObject() {
-    var check: String = OutInEnum.IN.toString()
+    var check: String = OutInEnum.IN.name
     var dateTime: Int = Calendar.AM //TODO rm it not used anymore
     var id: Long = -1
     var date: Date? = null
@@ -21,10 +21,6 @@ open class TimeSchedule : RealmObject() {
     var checkInDatePm: Date? = null
     var checkOutDatePm: Date? = null
     var currentCheckedDate: Date? = null
-
-    fun setCheck(check: OutInEnum) {
-        this.check = check.toString()
-    }
 
     fun getCheck(): OutInEnum {
         return OutInEnum.valueOf(check)

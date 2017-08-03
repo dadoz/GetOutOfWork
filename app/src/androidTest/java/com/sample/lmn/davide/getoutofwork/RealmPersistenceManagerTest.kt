@@ -3,6 +3,7 @@ package com.sample.lmn.davide.getoutofwork
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
+import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
@@ -88,21 +89,21 @@ class RealmPersistenceManagerTest {
     @Test
     fun isCheckInTestAMTest() {
         realmInstance.checkToday()
-        assertEquals(realmInstance.isCheckedInToday(Calendar.AM), true)
+        assertEquals(realmInstance.isCheckAt(Calendar.AM, OutInEnum.IN), true)
     }
     @Test
     fun isCheckInTestPMTest() {
         realmInstance.checkToday()
-        assertEquals(realmInstance.isCheckedInToday(Calendar.PM), true)
+        assertEquals(realmInstance.isCheckAt(Calendar.AM, OutInEnum.IN), true)
     }
     @Test
     fun isCheckOutTestAMTest() {
         realmInstance.checkToday()
-        assertEquals(realmInstance.isCheckedOutToday(Calendar.AM), true)
+        assertEquals(realmInstance.isCheckAt(Calendar.AM, OutInEnum.IN), true)
     }
     @Test
     fun isCheckOutTestPMTest() {
         realmInstance.checkToday()
-        assertEquals(realmInstance.isCheckedOutToday(Calendar.PM), true)
+        assertEquals(realmInstance.isCheckAt(Calendar.AM, OutInEnum.IN), true)
     }
 }

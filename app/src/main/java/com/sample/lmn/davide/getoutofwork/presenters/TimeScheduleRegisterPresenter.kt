@@ -37,7 +37,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      *
      */
     fun setCheck() {
-        persistenceManager.checkToday()?: return showError(timeSchedule.getCheck(), timeSchedule.dateTime)
+        timeSchedule = persistenceManager.checkToday()?: return showError(timeSchedule.getCheck(), timeSchedule.dateTime)
         view.updateCheckCardview(timeSchedule)
     }
 
@@ -61,6 +61,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      */
     fun onUpdateTimeSchedule(newValue: TimeSchedule) {
         //set clock time
+
         view.setClockOutTime(getClockOutDate())
         //update cardview
         timeSchedule.currentCheckedDate?.let {
@@ -68,7 +69,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
         }
     }
 
-    fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
+    fun getClockOutDate(): Date? = persistenceManager.calculateClockOutDate()
 
     fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
 }

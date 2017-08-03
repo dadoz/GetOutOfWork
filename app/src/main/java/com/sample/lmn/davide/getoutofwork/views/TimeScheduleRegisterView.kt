@@ -11,7 +11,7 @@ interface TimeScheduleRegisterView {
 //    fun setUICheckOutAm(date: Date)
 //    fun setUICheckInPm(date: Date)
 //    fun setUICheckOutPm(date: Date)
-    fun setClockOutTime(date: Date)
+    fun setClockOutTime(date: Date?)
     fun showErrorUI(message: String)
     fun updateCheckCardview(timeSchedule : TimeSchedule)
 }

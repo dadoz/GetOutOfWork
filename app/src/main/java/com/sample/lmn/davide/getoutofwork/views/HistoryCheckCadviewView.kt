@@ -34,8 +34,8 @@ class HistoryCheckCadviewView : CardView {
         historyCheckOutDateTextId.text = date.italianFormat()
     }
 
-    fun setClockOutTime(clockOutDate: Date) {
-        clockOutDateTextId.text = clockOutDate.timeFormat()
+    fun setClockOutTime(clockOutDate: Date?) {
+        clockOutDateTextId.text = clockOutDate?.timeFormat()?: " - "
     }
 
     fun setClockAm(today: TimeSchedule) {
@@ -43,7 +43,7 @@ class HistoryCheckCadviewView : CardView {
         historyCheckOutDateTextId.text = today.checkOutDateAm?.italianFormat()?: context.getString(R.string.no_clock_am)
     }
 
-    fun init(clockOutDate: Date, clockToday: TimeSchedule) {
+    fun init(clockOutDate: Date?, clockToday: TimeSchedule) {
         setClockOutTime(clockOutDate)
         setClockAm(clockToday)
     }

@@ -36,7 +36,7 @@ class TimeSchedulPresenterEspressoTest {
         //check in to make in error setCheckIn
         InstrumentationRegistry.getInstrumentation().runOnMainSync({
             presenter = TimeScheduleRegisterPresenter(object: TimeScheduleRegisterView {
-                override fun setClockOutTime(date: Date) {
+                override fun setClockOutTime(date: Date?) {
                 }
 
                 override fun showErrorUI(message: String) {

@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     }
 
     /**
-     *
+     * move in presenter
      */
     override fun updateCheckCardview(timeSchedule: TimeSchedule) {
         with(timeSchedule) {
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      * set clock out time
      */
-    override fun setClockOutTime(date: Date) {
+    override fun setClockOutTime(date: Date?) {
         historyCheckCardviewId.setClockOutTime(date)
     }
 

@@ -55,7 +55,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
         val timeSchedule = realm.where(TimeSchedule::class.java)
                 .between("date", Dates.today.beginningOfDay, Dates.today.endOfDay)
                 .findFirst()?: createTodayTimeSchedule()
-        return timeSchedule.apply { if (dateTime == AM && Date().isPm()) realm.executeTransaction { dateTime = PM }}
+        return timeSchedule.apply { if ((dateTime == AM) and (check == OutInEnum.IN.name) and (Date().isPm())) realm.executeTransaction { dateTime = PM }}
     }
 
     /**
@@ -69,14 +69,15 @@ class RealmPersistenceManager(val applicationContext: Context) {
                  AM -> when (getCheck()) {
                     OutInEnum.IN -> {
                         executeTransactionConditionally(!isCheckedInAm(), Realm.Transaction {
-                            this.currentCheckedDate = currentDate
+                            currentCheckedDate = currentDate
                             checkInDateAm = currentDate
                             check = OutInEnum.OUT.name
                         }, this)
                     }
                     OutInEnum.OUT -> {
                         executeTransactionConditionally(!isCheckedOutAm(), Realm.Transaction {
-                            this.currentCheckedDate = currentDate
+                            currentCheckedDate = currentDate
+                            checkOutDateAm = currentDate
                             dateTime = PM
                             check = OutInEnum.IN.name
                         }, this)
@@ -85,12 +86,18 @@ class RealmPersistenceManager(val applicationContext: Context) {
                 PM -> when (getCheck()) {
                     OutInEnum.IN -> {
                         executeTransactionConditionally(!isCheckedInPm(), Realm.Transaction {
-                            this.currentCheckedDate = currentDate
+                            currentCheckedDate = currentDate
                             checkInDatePm = currentDate
                             check = OutInEnum.OUT.name
                         }, this)
                     }
                     OutInEnum.OUT -> {
+                        executeTransactionConditionally(!isCheckedInPm(), Realm.Transaction {
+                            currentCheckedDate = currentDate
+                            checkOutDatePm = currentDate
+                            check = OutInEnum.OUT.name
+                        }, this)
+                        //to avoid check
                         null
                     }
                 }
@@ -145,18 +152,17 @@ class RealmPersistenceManager(val applicationContext: Context) {
     /**
      * TODO add a test
      */
-    fun calculateClockOutDate(): Date {
+    fun calculateClockOutDate(): Date? {
         return with(getTodayTimeSchedule(), {
-            if (checkOutDatePm != null)
-                checkOutDatePm as Date
-            else if (checkInDatePm != null) {
-                checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
-            } else if (checkOutDateAm != null) {
-                checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour else (checkInDateAm as Date).diffHours(checkOutDateAm)
-            } else if (checkInDateAm != null)
-                checkInDateAm as Date + 8.hours + 1.hour //take launch time
-            else
-                Date()
+            when {
+                checkOutDatePm != null -> checkOutDatePm as Date
+                checkInDatePm != null -> checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour
+                    else (checkInDateAm as Date).diffHours(checkOutDateAm)
+                checkOutDateAm != null -> checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour
+                    else (checkInDateAm as Date).diffHours(checkOutDateAm)
+                checkInDateAm != null -> checkInDateAm as Date + 8.hours + 1.hour //take launch time
+                else -> null
+            }
         })
     }
 
