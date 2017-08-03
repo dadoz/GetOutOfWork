@@ -37,7 +37,7 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      *
      */
     fun setCheck() {
-        persistenceManager.checkToday() //?: showError(timeSchedule.getCheck(), timeSchedule.dateTime)
+        persistenceManager.checkToday()?: showError(timeSchedule.getCheck(), timeSchedule.dateTime)
         view.updateCheckCardview(timeSchedule)
     }
 
