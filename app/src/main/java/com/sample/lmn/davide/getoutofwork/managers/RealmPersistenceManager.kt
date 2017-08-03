@@ -110,7 +110,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * execute only on certain condition otw return false
      */
     fun executeTransactionConditionally(isChecked: Boolean, transactionAsync: Realm.Transaction): Boolean  =
-            if (isChecked) { realm.executeTransactionAsync(transactionAsync); true } else false
+            if (isChecked) { realm.executeTransaction(transactionAsync); true } else false
 
 //            realm.executeTransaction {
 //                //set check time
