@@ -4,7 +4,6 @@ import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.presenters.diffHours
-import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.presenters.isPm
 import io.realm.Realm
 import khronos.*
@@ -38,18 +37,13 @@ class RealmPersistenceManager(val applicationContext: Context) {
      */
     fun initTodayTimeSchedule(): TimeSchedule  = getTodayTimeSchedule()
 
-//    /**
-//     * TODO add test
-//     */
-//    fun findTimeSchedule(date: Date): TimeSchedule = realm.where(TimeSchedule::class.java)
-//            .equalTo("date", date).findFirst()
-
     /**
      * TODO add a test
      */
     fun createTodayTimeSchedule(): TimeSchedule {
-        realm.executeTransaction { realm ->
-            with(realm.createObject(TimeSchedule::class.java), { date = Date() }) }
+        realm.executeTransaction {
+            realm -> with(realm.createObject(TimeSchedule::class.java), { date = Date() })
+        }
         return getTodayTimeSchedule()
     }
 
@@ -57,9 +51,11 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO create a test
      */
     fun getTodayTimeSchedule(): TimeSchedule {
-        return realm.where(TimeSchedule::class.java)
+        //set time schedule
+        val timeSchedule = realm.where(TimeSchedule::class.java)
                 .between("date", Dates.today.beginningOfDay, Dates.today.endOfDay)
                 .findFirst()?: createTodayTimeSchedule()
+        return timeSchedule.apply { if (dateTime == AM && Date().isPm()) realm.executeTransaction { dateTime = PM }}
     }
 
     /**
@@ -69,8 +65,8 @@ class RealmPersistenceManager(val applicationContext: Context) {
     fun checkToday(): TimeSchedule? {
         val currentDate = Date()
         with(getTodayTimeSchedule(), {
-            return when {
-                Date().isAm() -> when (getCheck()) {
+            return when(dateTime) {
+                 AM -> when (getCheck()) {
                     OutInEnum.IN -> {
                         executeTransactionConditionally(!isCheckedInAm(), Realm.Transaction {
                             this.currentCheckedDate = currentDate
@@ -86,7 +82,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
                         }, this)
                     }
                 }
-                Date().isPm() -> when (getCheck()) {
+                PM -> when (getCheck()) {
                     OutInEnum.IN -> {
                         executeTransactionConditionally(!isCheckedInPm(), Realm.Transaction {
                             this.currentCheckedDate = currentDate
