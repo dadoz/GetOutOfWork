@@ -20,7 +20,7 @@ open class TimeSchedule : RealmObject() {
     var checkOutDateAm: Date? = null
     var checkInDatePm: Date? = null
     var checkOutDatePm: Date? = null
-    var currentCheckedDate: Date = Date()
+    var currentCheckedDate: Date? = null
 
     fun setCheck(check: OutInEnum) {
         this.check = check.toString()

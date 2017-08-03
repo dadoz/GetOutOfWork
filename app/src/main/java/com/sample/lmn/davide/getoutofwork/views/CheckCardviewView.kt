@@ -27,27 +27,27 @@ class CheckCardviewView : CardView {
 
     fun setBackgroundColorByRes(color: Int) { setBackgroundColor(ContextCompat.getColor(context, color)) }
 
-    fun setOutAmLayout(date: Date) {
+    fun setOutAmLayout(date: Date?) {
         setCardLayout(date, R.drawable.character)
     }
 
-    fun setInAmLayout(date: Date) {
+    fun setInAmLayout(date: Date?) {
         setCardLayout(date, R.drawable.character)
     }
 
-    fun setInPmLayout(date: Date) {
+    fun setInPmLayout(date: Date?) {
         setCardLayout(date, R.drawable.character)
     }
 
-    fun setOutPmLayout(date: Date) {
+    fun setOutPmLayout(date: Date?) {
         setCardLayout(date, R.drawable.character)
     }
 
     /**
      *
      */
-    private fun setCardLayout(date: Date, resourceDrawableId : Int) {
-        checkDateTextId.text = date.italianFormat()
+    private fun setCardLayout(date: Date?, resourceDrawableId : Int) {
+        checkDateTextId.text = date?.italianFormat()
 //        checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
         setBackgroundColorByRes(R.color.md_blue_grey_800)
         checkDateTextId.setTextColor(ContextCompat.getColor(context, R.color.md_grey_50))

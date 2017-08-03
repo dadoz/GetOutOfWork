@@ -62,27 +62,10 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
     fun onUpdateTimeSchedule(newValue: TimeSchedule) {
         //set clock time
         view.setClockOutTime(getClockOutDate())
-
         //update cardview
-        if (timeSchedule.checkInDateAm != null)
+        timeSchedule.currentCheckedDate?.let {
             view.updateCheckCardview(timeSchedule)
-
-        //update status
-//        with(newValue, {
-//            if (checkInDateAm != null) {
-//                check = OutInEnum.OUT
-//                dateTime = Calendar.AM
-//            }
-//            if (checkOutDateAm != null) {
-//                check = OutInEnum.IN
-//                dateTime = Calendar.PM
-//            }
-//            if (checkInDatePm != null) {
-//                check = OutInEnum.OUT
-//                dateTime = Calendar.PM
-//            }
-//        })
-
+        }
     }
 
     fun getClockOutDate(): Date = persistenceManager.calculateClockOutDate()
