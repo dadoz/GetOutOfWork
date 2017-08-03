@@ -13,7 +13,7 @@ enum class OutInEnum {
 
 open class TimeSchedule : RealmObject() {
     var check: String = OutInEnum.IN.toString()
-    var dateTime: Int = Calendar.AM
+    var dateTime: Int = Calendar.AM //TODO rm it not used anymore
     var id: Long = -1
     var date: Date? = null
     var checkInDateAm: Date? = null
