@@ -4,6 +4,8 @@ import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.presenters.diffHours
+import com.sample.lmn.davide.getoutofwork.presenters.isAm
+import com.sample.lmn.davide.getoutofwork.presenters.isPm
 import io.realm.Realm
 import khronos.*
 import java.util.*
@@ -64,40 +66,84 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO make test
      *
      */
-    fun checkToday(): TimeSchedule {
-        with(getTodayTimeSchedule(), {
-            realm.executeTransaction {
-                //set check time
-                val currentDate = Date()
-                this.currentCheckedDate = currentDate
-                when (dateTime) {
-                    AM -> when (getCheck()) {
-                        OutInEnum.IN -> {
+    fun checkToday(): TimeSchedule? {
+       with(getTodayTimeSchedule(), {
+           val result: Boolean = when (dateTime) {
+                AM -> when (getCheck()) {
+                    OutInEnum.IN -> {
+                        executeTransactionConditionally(isCheckedInToday(Calendar.AM) and Date().isAm(), Realm.Transaction {
+                            val currentDate = Date()
+                            this.currentCheckedDate = currentDate
                             checkInDateAm = currentDate
                             check = OutInEnum.OUT.name
-                        }
-                        OutInEnum.OUT -> {
-                            checkOutDateAm = currentDate
-                            dateTime = PM
-                            check = OutInEnum.IN.name
-                        }
+                        })
                     }
-                    PM -> when (getCheck()) {
-                        OutInEnum.IN -> {
-                            checkInDatePm = currentDate
+                    OutInEnum.OUT -> {
+                        executeTransactionConditionally(isCheckedAm() and Date().isAm(), Realm.Transaction {
+                            val currentDate = Date()
+                            this.currentCheckedDate = currentDate
+                            checkInDateAm = currentDate
                             check = OutInEnum.OUT.name
-                        }
-                        OutInEnum.OUT -> {
-//                            checkOutDatePM = currentDate
-//                            dateTime = PM
-//                            check = OutInEnum.IN.name
-                        }
+                        })
                     }
                 }
-            }
-            return this
+                PM -> when (getCheck()) {
+                    OutInEnum.IN -> {
+                        executeTransactionConditionally(isCheckedPm() and Date().isPm(), Realm.Transaction {
+                            val currentDate = Date()
+                            this.currentCheckedDate = currentDate
+                            checkInDateAm = currentDate
+                            check = OutInEnum.OUT.name
+                        })
+                    }
+                    OutInEnum.OUT -> {
+                        false
+                    }
+                }
+                else -> {
+                    false
+                }
+           }
+           return if (result) this else null
         })
     }
+
+    /**
+     * execute only on certain condition otw return false
+     */
+    fun executeTransactionConditionally(isChecked: Boolean, function: Realm.Transaction): Boolean  =
+            if (isChecked) { function.execute(realm); true } else false
+
+//            realm.executeTransaction {
+//                //set check time
+//                val currentDate = Date()
+//                this.currentCheckedDate = currentDate
+//                when (dateTime) {
+//                    AM -> when (getCheck()) {
+//                        OutInEnum.IN -> {
+//                            checkInDateAm = currentDate
+//                            check = OutInEnum.OUT.name
+//                        }
+//                        OutInEnum.OUT -> {
+//                            checkOutDateAm = currentDate
+//                            dateTime = PM
+//                            check = OutInEnum.IN.name
+//                        }
+//                    }
+//                    PM -> when (getCheck()) {
+//                        OutInEnum.IN -> {
+//                            checkInDatePm = currentDate
+//                            check = OutInEnum.OUT.name
+//                        }
+//                        OutInEnum.OUT -> {
+////                            checkOutDatePM = currentDate
+////                            dateTime = PM
+////                            check = OutInEnum.IN.name
+//                        }
+//                    }
+//                }
+//            }
+//        })
 
     /**
      * TODO add a test

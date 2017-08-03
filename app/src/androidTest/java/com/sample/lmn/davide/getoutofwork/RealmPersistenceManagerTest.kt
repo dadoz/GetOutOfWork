@@ -50,7 +50,7 @@ class RealmPersistenceManagerTest {
     @Test
     fun checkInTestAM() {
         //assert
-        realmInstance.checkInTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
 
         assertNotNull(realmInstance.getTodayTimeSchedule())
         assertNotNull(realmInstance.getTodayTimeSchedule().checkInDateAm)
@@ -60,7 +60,7 @@ class RealmPersistenceManagerTest {
     fun checkOutTestAM() {
         //assert
         //assert
-        realmInstance.checkOutTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
 
         assertNotNull(realmInstance.getTodayTimeSchedule())
         assertNotNull(realmInstance.getTodayTimeSchedule().checkOutDateAm)
@@ -69,7 +69,7 @@ class RealmPersistenceManagerTest {
     @Test
     fun checkInTestPM() {
         //assert
-        realmInstance.checkInTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
 
         assertNotNull(realmInstance.getTodayTimeSchedule())
         assertNotNull(realmInstance.getTodayTimeSchedule().checkInDateAm)
@@ -79,7 +79,7 @@ class RealmPersistenceManagerTest {
     fun checkOutTestPM() {
         //assert
         //assert
-        realmInstance.checkOutTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
 
         assertNotNull(realmInstance.getTodayTimeSchedule())
         assertNotNull(realmInstance.getTodayTimeSchedule().checkOutDateAm)
@@ -87,22 +87,22 @@ class RealmPersistenceManagerTest {
 
     @Test
     fun isCheckInTestAMTest() {
-        realmInstance.checkInTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
         assertEquals(realmInstance.isCheckedInToday(Calendar.AM), true)
     }
     @Test
     fun isCheckInTestPMTest() {
-        realmInstance.checkInTodayTimeSchedule(Calendar.PM)
+        realmInstance.checkToday()
         assertEquals(realmInstance.isCheckedInToday(Calendar.PM), true)
     }
     @Test
     fun isCheckOutTestAMTest() {
-        realmInstance.checkOutTodayTimeSchedule(Calendar.AM)
+        realmInstance.checkToday()
         assertEquals(realmInstance.isCheckedOutToday(Calendar.AM), true)
     }
     @Test
     fun isCheckOutTestPMTest() {
-        realmInstance.checkOutTodayTimeSchedule(Calendar.PM)
+        realmInstance.checkToday()
         assertEquals(realmInstance.isCheckedOutToday(Calendar.PM), true)
     }
 }
