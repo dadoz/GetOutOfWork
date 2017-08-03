@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_16"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/checkDateTextId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:text=" - not checked"
-        android:textColor="@color/colorPrimary"/>
-    <TextView
-        android:id="@+id/checkButtonStatusTextId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/margin_8"
-        android:textSize="12sp"
-        android:text="please tap to check your entrance or exit"
-        android:textColor="@color/md_blue_grey_800"/>
+    android:layout_height="match_parent">
     <ImageView
         android:id="@+id/checkImageViewId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="300dp"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/margin_16"
+        android:src="@drawable/cat_coffee_col_white"/>
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_blue_grey_200"
+        android:padding="@dimen/margin_16">
+        <TextView
+            android:layout_alignParentRight="true"
+            android:id="@+id/checkDateTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="16:00"
+            android:textColor="@color/md_grey_50"/>
+        <TextView
+            android:id="@+id/checkButtonStatusTextId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/margin_8"
+            android:textSize="16sp"
+            android:text="please tap to check your entrance or exit"
+            android:textColor="@color/md_blue_grey_800"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

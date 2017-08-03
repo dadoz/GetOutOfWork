@@ -28,28 +28,31 @@ class CheckCardviewView : CardView {
     fun setBackgroundColorByRes(color: Int) { setBackgroundColor(ContextCompat.getColor(context, color)) }
 
     fun setOutAmLayout(date: Date?) {
-        setCardLayout(date, R.drawable.character)
+        setCardLayout(date, null, null)
     }
 
     fun setInAmLayout(date: Date?) {
-        setCardLayout(date, R.drawable.character)
+        setCardLayout(date, R.drawable.cat_coffee_col_white, "tap to start your work day")
     }
 
     fun setInPmLayout(date: Date?) {
-        setCardLayout(date, R.drawable.character)
+        setCardLayout(date, null, null)
     }
 
     fun setOutPmLayout(date: Date?) {
-        setCardLayout(date, R.drawable.character)
+        setCardLayout(date, null, null)
     }
 
     /**
      *
      */
-    private fun setCardLayout(date: Date?, resourceDrawableId : Int) {
-        checkDateTextId.text = date?.italianFormat()
-//        checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
-        setBackgroundColorByRes(R.color.md_blue_grey_800)
-        checkDateTextId.setTextColor(ContextCompat.getColor(context, R.color.md_grey_50))
+    private fun setCardLayout(date: Date?, resourceDrawableId : Int?, message: String ?) {
+        checkDateTextId.text = date?.italianFormat()?: " - "
+        resourceDrawableId?.let {
+            checkImageViewId.setImageDrawable(ContextCompat.getDrawable(context, resourceDrawableId))
+        }
+        checkButtonStatusTextId.text = message
+//        setBackgroundColorByRes(R.color.md_blue_grey_800)
+//        checkDateTextId.setTextColor(ContextCompat.getColor(context, R.color.md_grey_50))
     }
 }
