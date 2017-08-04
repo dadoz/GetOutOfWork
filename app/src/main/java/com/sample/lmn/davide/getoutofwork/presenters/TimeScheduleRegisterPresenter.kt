@@ -27,8 +27,6 @@ fun Date.diffHours(date: Date?): Duration {
  */
 class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
                                     val persistenceManager: RealmPersistenceManager) {
-    //TODO config responsabilityChain
-
     init {
         persistenceManager.initTodayTimeSchedule()
     }

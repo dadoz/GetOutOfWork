@@ -138,7 +138,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
             }
         })
     }
-    
+
     /**
      * execute only on certain condition otw return false
      */
