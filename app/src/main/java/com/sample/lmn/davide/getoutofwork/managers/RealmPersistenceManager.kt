@@ -94,7 +94,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
                     OutInEnum.OUT -> {
                         executeTransactionConditionally(!isCheckedInPm(), Realm.Transaction {
                             currentCheckedDate = currentDate
-                            checkOutDatePm = currentDate
+//                            checkOutDatePm = currentDate //TODO test mode if you get out before you dont check!
                             check = OutInEnum.OUT.name
                         }, this)
                         //to avoid check
@@ -108,6 +108,37 @@ class RealmPersistenceManager(val applicationContext: Context) {
         })
     }
 
+    /**
+     * is check today
+     */
+    fun isCheckAt(dateTime: Int, check: OutInEnum): Boolean {
+        with(getTodayTimeSchedule(), {
+            return when {
+                ((dateTime == AM) and (check == OutInEnum.IN)) -> checkInDateAm != null
+                ((dateTime == AM) and (check == OutInEnum.OUT)) -> checkOutDateAm != null
+                ((dateTime == PM) and (check == OutInEnum.IN)) -> checkOutDatePm != null
+                ((dateTime == PM) and (check == OutInEnum.OUT)) -> checkOutDatePm != null
+                else -> false
+            }
+        })
+    }
+    /**
+     * TODO add a test
+     */
+    fun calculateClockOutDate(): Date? {
+        return with(getTodayTimeSchedule(), {
+            when {
+                checkOutDatePm != null -> checkOutDatePm as Date
+                checkInDatePm != null -> checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour
+                else (checkInDateAm as Date).diffHours(checkOutDateAm)
+                checkOutDateAm != null -> checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour
+                else (checkInDateAm as Date).diffHours(checkOutDateAm)
+                checkInDateAm != null -> checkInDateAm as Date + 8.hours + 1.hour //take launch time
+                else -> null
+            }
+        })
+    }
+    
     /**
      * execute only on certain condition otw return false
      */
@@ -133,38 +164,6 @@ class RealmPersistenceManager(val applicationContext: Context) {
      */
     private fun isCheckedOutPm(): Boolean  = isCheckAt(Calendar.PM, OutInEnum.IN) and !isCheckAt(Calendar.PM, OutInEnum.OUT)
 
-    /**
-     * is check today
-     */
-    fun isCheckAt(dateTime: Int, check: OutInEnum): Boolean {
-        with(getTodayTimeSchedule(), {
-            if ((dateTime == AM) and (check == OutInEnum.IN))
-                return checkInDateAm != null
-            if ((dateTime == AM) and (check == OutInEnum.OUT))
-                return checkOutDateAm != null
-            if ((dateTime == PM) and (check == OutInEnum.IN))
-                return checkOutDatePm != null
-            if ((dateTime == PM) and (check == OutInEnum.OUT))
-                return checkOutDatePm != null
-            return false
-        })
-    }
-    /**
-     * TODO add a test
-     */
-    fun calculateClockOutDate(): Date? {
-        return with(getTodayTimeSchedule(), {
-            when {
-                checkOutDatePm != null -> checkOutDatePm as Date
-                checkInDatePm != null -> checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour
-                    else (checkInDateAm as Date).diffHours(checkOutDateAm)
-                checkOutDateAm != null -> checkOutDateAm as Date + 8.hours + 1.hour - if (checkInDateAm == null) 0.hour
-                    else (checkInDateAm as Date).diffHours(checkOutDateAm)
-                checkInDateAm != null -> checkInDateAm as Date + 8.hours + 1.hour //take launch time
-                else -> null
-            }
-        })
-    }
 
 }
 
