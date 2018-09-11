@@ -16,6 +16,8 @@ import java.util.Calendar.PM
  */
 class RealmPersistenceManager(val applicationContext: Context) {
     val realm: Realm by lazy {
+//        val test = RealmConfiguration.Builder(applicationContext).deleteRealmIfMigrationNeeded().build()
+//        Realm.setDefaultConfiguration(test)
         Realm.init(applicationContext)
         Realm.getDefaultInstance()
     }
@@ -64,9 +66,9 @@ class RealmPersistenceManager(val applicationContext: Context) {
      */
     fun checkToday(): TimeSchedule? {
         val currentDate = Date()
-        with(getTodayTimeSchedule(), {
+        with(getTodayTimeSchedule()) {
             return when(dateTime) {
-                 AM -> when (getCheck()) {
+                AM -> when (getCheck()) {
                     OutInEnum.IN -> {
                         executeTransactionConditionally(!isCheckedInAm(), Realm.Transaction {
                             currentCheckedDate = currentDate
@@ -105,7 +107,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
                     null
                 }
             }
-        })
+        }
     }
 
     /**
@@ -114,6 +116,16 @@ class RealmPersistenceManager(val applicationContext: Context) {
     fun executeTransactionConditionally(isChecked: Boolean, transactionAsync: Realm.Transaction, timeSchedule: TimeSchedule): TimeSchedule?  =
             if (isChecked) { realm.executeTransaction(transactionAsync); timeSchedule } else null
 
+//    class RealmTransactionDelegate(val realm: Realm, val transaction: Realm.Transaction, val isChecked: Boolean) : ReadWriteProperty<Any?, TimeSchedule?> {
+//
+//        override fun getValue(thisRef: Any?, property: KProperty<*>): TimeSchedule? {
+//            return if (isChecked) { realm.executeTransaction(transaction); property } else null
+//        }
+//
+//        override fun setValue(thisRef: Any?, property: KProperty<*>, value: TimeSchedule?) {
+//
+//        }
+//    }
     /**
      *
      */
