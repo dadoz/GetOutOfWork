@@ -14,10 +14,6 @@
             android:id="@+id/checkDateTextId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <!--<TextView-->
-        <!--android:id="@+id/checkOutDateTextId"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
