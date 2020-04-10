@@ -16,7 +16,7 @@
         android:textSize="24sp"
         android:layout_marginTop="@dimen/margin_16"
         android:text="Morning - Afternoon"/>
-    <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCadviewView
+    <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCardviewView
         android:id="@+id/historyCheckCardviewId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

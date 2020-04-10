@@ -1,10 +1,10 @@
 package com.sample.lmn.davide.getoutofwork.views
 
 import android.content.Context
-import android.support.annotation.AttrRes
-import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.cardview.widget.CardView
 import com.sample.lmn.davide.getoutofwork.R
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
@@ -16,14 +16,12 @@ import java.util.*
  * Created by davide on 08/07/2017.
  */
 
-class HistoryCheckCadviewView : CardView {
+class HistoryCheckCardviewView : CardView {
     constructor(context: Context) : super(context) {inflateLayout()}
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {inflateLayout()}
-
     constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {inflateLayout()}
 
-    fun inflateLayout() {
+    private fun inflateLayout() {
         View.inflate(context, R.layout.history_check_cardview_layout, this)
     }
 

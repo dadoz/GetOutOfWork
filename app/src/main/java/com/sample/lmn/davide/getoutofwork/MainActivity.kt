@@ -5,9 +5,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
 import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
         presenter.initView()
         historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-        checkCardviewId.setOnClickListener { presenter.setCheck() }
+//        checkCardviewId.setOnClickListener { presenter.setCheck() }
     }
 
     /**

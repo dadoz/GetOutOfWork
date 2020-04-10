@@ -1,11 +1,11 @@
 package com.sample.lmn.davide.getoutofwork.views
 
 import android.content.Context
-import android.support.annotation.AttrRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.cardview.widget.CardView
 import com.sample.lmn.davide.getoutofwork.R
 import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
 import kotlinx.android.synthetic.main.check_cardview_layout.view.*

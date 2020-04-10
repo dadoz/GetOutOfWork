@@ -1,11 +1,11 @@
 package com.sample.lmn.davide.getoutofwork.views
 
 import android.content.Context
-import android.support.annotation.AttrRes
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.AttrRes
 import com.sample.lmn.davide.getoutofwork.R
 import kotlinx.android.synthetic.main.tag_cardview_layout.view.*
 import java.util.*
