@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/checkImageViewId"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/margin_16"
-        android:src="@drawable/cat_coffee_col_white"/>
+<merge
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <RelativeLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_blue_grey_200"
-        android:padding="@dimen/margin_8">
-        <TextView
-            android:layout_alignParentRight="true"
-            android:id="@+id/checkDateTextId"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/checkImageViewId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="16:00"
-            android:textColor="@color/md_grey_50"/>
-        <TextView
-            android:id="@+id/checkButtonStatusTextId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:text="please tap to check your entrance or exit"
-            android:textColor="@color/md_blue_grey_800"/>
+            android:padding="@dimen/margin_16"
+            android:src="@drawable/cat_coffee_col_white"/>
+        <RelativeLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrey"
+            android:padding="@dimen/margin_8">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/checkDateTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/indie_flower"
+                android:text="16:00"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:textColor="@color/colorGreyLight"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/checkButtonStatusTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/indie_flower"
+                android:layout_marginStart="@dimen/margin_16"
+                android:text="please tap to check your entrance or exit"
+                android:textColor="@color/colorGreyLight"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
-
-</RelativeLayout>
+</merge>

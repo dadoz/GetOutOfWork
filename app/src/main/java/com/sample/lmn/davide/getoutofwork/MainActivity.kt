@@ -19,23 +19,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
-
-    val connection: LocalServiceConnection = LocalServiceConnection()
-
-    val presenter: TimeScheduleRegisterPresenter by lazy {
+    private val connection: LocalServiceConnection = LocalServiceConnection()
+    private val presenter: TimeScheduleRegisterPresenter by lazy {
         TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
     }
-
     lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //init component
         onInit()
-
-        //init view
         onInitView()
     }
 
@@ -51,7 +44,6 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         //bind service
         bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
                 Context.BIND_AUTO_CREATE)
-
         timeSchedulePersistenceManager = RealmPersistenceManager.Holder(applicationContext).instance
     }
 
@@ -94,7 +86,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     override fun showErrorUI(message: String) {
         val snackbar = Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
                 message, Snackbar.LENGTH_SHORT)
-        snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.md_red_400))
+//        snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorRed))
         snackbar.show()
     }
 

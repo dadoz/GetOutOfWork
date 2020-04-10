@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import com.sample.lmn.davide.getoutofwork.R
 import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
 import kotlinx.android.synthetic.main.check_cardview_layout.view.*
@@ -14,14 +15,14 @@ import java.util.*
 /**
  * Created by davide-syn on 7/5/17.
  */
-class CheckCardviewView : CardView {
+class CheckCardviewView : MaterialCardView {
     constructor(context: Context) : super(context) { inflateLayout() }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {inflateLayout()}
 
     constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {inflateLayout()}
 
-    fun inflateLayout() {
+    private fun inflateLayout() {
         View.inflate(context, R.layout.check_cardview_layout, this)
     }
 
