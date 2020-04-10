@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 
         presenter.initView()
         historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-//        checkCardviewId.setOnClickListener { presenter.setCheck() }
+        checkCardviewId.setOnClickListener { presenter.setCheck() }
     }
 
     /**
