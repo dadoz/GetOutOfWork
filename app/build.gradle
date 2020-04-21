@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -36,6 +37,8 @@ dependencies {
     //date handler
     implementation "com.github.hotchemi:khronos:$khronos_version"
     implementation "com.google.firebase:firebase-analytics:$firebase_version"
+    implementation 'com.google.firebase:firebase-analytics:17.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta04'
 
     //junit
     testImplementation 'junit:junit:4.13'
