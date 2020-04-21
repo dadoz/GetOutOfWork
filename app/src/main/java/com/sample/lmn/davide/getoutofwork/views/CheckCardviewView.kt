@@ -17,9 +17,7 @@ import java.util.*
  */
 class CheckCardviewView : MaterialCardView {
     constructor(context: Context) : super(context) { inflateLayout() }
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {inflateLayout()}
-
     constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {inflateLayout()}
 
     private fun inflateLayout() {

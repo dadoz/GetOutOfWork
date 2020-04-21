@@ -20,7 +20,28 @@
         android:textColor="@color/colorAccent"
         android:textSize="48sp" />
     <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCardviewView
-        android:id="@+id/historyCheckCardviewId"
+        android:id="@+id/timeEnterCardId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16" />
+    <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCardviewView
+        android:id="@+id/timeExitCardId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16" />
+    <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCardviewView
+        android:id="@+id/totHoursCardId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_marginRight="@dimen/margin_16" />
+    <com.sample.lmn.davide.getoutofwork.views.HistoryCheckCardviewView
+        android:id="@+id/setLaunchTimeCardId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
@@ -28,23 +49,8 @@
         android:layout_marginRight="@dimen/margin_16" />
     <com.sample.lmn.davide.getoutofwork.views.CheckCardviewView
         android:id="@+id/checkCardviewId"
-        android:layout_weight="2"
-        android:layout_margin="@dimen/margin_16"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <!--<com.sample.lmn.davide.getoutofwork.views.CheckCardviewView-->
-        <!--android:id="@+id/checkInCardviewId"-->
-        <!--android:layout_weight="2"-->
-        <!--android:layout_margin="@dimen/margin_16"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
-    <!--<com.sample.lmn.davide.getoutofwork.views.CheckCardviewView-->
-        <!--android:id="@+id/checkOutCardviewId"-->
-        <!--android:layout_marginLeft="@dimen/margin_16"-->
-        <!--android:layout_marginRight="@dimen/margin_16"-->
-        <!--android:layout_marginBottom="@dimen/margin_16"-->
-        <!--android:layout_weight="2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"/>-->
-
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_margin="@dimen/margin_16" />
 </LinearLayout>

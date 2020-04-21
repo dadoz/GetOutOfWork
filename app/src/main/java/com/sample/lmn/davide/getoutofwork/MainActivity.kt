@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
@@ -23,12 +22,15 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     private val presenter: TimeScheduleRegisterPresenter by lazy {
         TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
     }
-    lateinit var timeSchedulePersistenceManager: RealmPersistenceManager
+
+    private val timeSchedulePersistenceManager by lazy {
+        RealmPersistenceManager.Holder(applicationContext).instance
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        onInit()
+        onInitService()
         onInitView()
     }
 
@@ -40,22 +42,18 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     /**
      * init view
      */
-    private fun onInit() {
-        //bind service
+    private fun onInitService() {
         bindService(Intent(this, RealTimeBackgroundService::class.java), connection,
                 Context.BIND_AUTO_CREATE)
-        timeSchedulePersistenceManager = RealmPersistenceManager.Holder(applicationContext).instance
     }
 
     /**
      *
      */
     private fun onInitView() {
-        //TODO to be removed
-        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
-
         presenter.initView()
-        historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
+        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
+//        historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
         checkCardviewId.setOnClickListener { presenter.setCheck() }
     }
 
@@ -63,7 +61,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * move in presenter
      */
     override fun updateCheckCardview(timeSchedule: TimeSchedule) {
-        with(timeSchedule) {
+        timeSchedule.apply {
             when {
                 ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.AM)) -> checkCardviewId.setInAmLayout(currentCheckedDate)
                 ((getCheck() == OutInEnum.OUT) and (dateTime == Calendar.AM)) -> checkCardviewId.setOutAmLayout(currentCheckedDate)
@@ -77,17 +75,15 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      * set clock out time
      */
     override fun setClockOutTime(date: Date?) {
-        historyCheckCardviewId.setClockOutTime(date)
+//        historyCheckCardviewId.setClockOutTime(date)
     }
 
     /**
      * set ui
      */
     override fun showErrorUI(message: String) {
-        val snackbar = Snackbar.make(mainViewLayoutId, "${getString(R.string.generic_error)} at " +
-                message, Snackbar.LENGTH_SHORT)
-//        snackbar.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorRed))
-        snackbar.show()
+        Snackbar.make(mainViewLayoutId,
+                "${getString(R.string.generic_error)} at $message", Snackbar.LENGTH_SHORT).show()
     }
 
     /**
