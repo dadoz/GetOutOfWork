@@ -2,7 +2,7 @@ package com.sample.lmn.davide.getoutofwork.managers
 
 import android.content.Context
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
-import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
+import com.sample.lmn.davide.getoutofwork.models.TimeScheduleRealm
 import com.sample.lmn.davide.getoutofwork.presenters.diffHours
 import com.sample.lmn.davide.getoutofwork.presenters.isPm
 import io.realm.Realm
@@ -37,26 +37,26 @@ class RealmPersistenceManager(val applicationContext: Context) {
     /**
      * TODO add test
      */
-    fun initTodayTimeSchedule(): TimeSchedule  = getTodayTimeSchedule()
+    fun initTodayTimeScheduleRealm(): TimeScheduleRealm  = getTodayTimeScheduleRealm()
 
     /**
      * TODO add a test
      */
-    fun createTodayTimeSchedule(): TimeSchedule {
+    fun createTodayTimeScheduleRealm(): TimeScheduleRealm {
         realm.executeTransaction {
-            realm -> with(realm.createObject(TimeSchedule::class.java), { date = Date() })
+            realm -> with(realm.createObject(TimeScheduleRealm::class.java), { date = Date() })
         }
-        return getTodayTimeSchedule()
+        return getTodayTimeScheduleRealm()
     }
 
     /**
      * TODO create a test
      */
-    fun getTodayTimeSchedule(): TimeSchedule {
+    fun getTodayTimeScheduleRealm(): TimeScheduleRealm {
         //set time schedule
-        val timeSchedule = realm.where(TimeSchedule::class.java)
+        val timeSchedule = realm.where(TimeScheduleRealm::class.java)
                 .between("date", Dates.today.beginningOfDay, Dates.today.endOfDay)
-                .findFirst()?: createTodayTimeSchedule()
+                .findFirst()?: createTodayTimeScheduleRealm()
         return timeSchedule.apply { if ((dateTime == AM) and (check == OutInEnum.IN.name) and (Date().isPm())) realm.executeTransaction { dateTime = PM }}
     }
 
@@ -64,9 +64,9 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO make test
      *
      */
-    fun checkToday(): TimeSchedule? {
+    fun checkToday(): TimeScheduleRealm? {
         val currentDate = Date()
-        with(getTodayTimeSchedule()) {
+        with(getTodayTimeScheduleRealm()) {
             return when(dateTime) {
                 AM -> when (getCheck()) {
                     OutInEnum.IN -> {
@@ -114,7 +114,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * is check today
      */
     fun isCheckAt(dateTime: Int, check: OutInEnum): Boolean {
-        with(getTodayTimeSchedule(), {
+        with(getTodayTimeScheduleRealm(), {
             return when {
                 ((dateTime == AM) and (check == OutInEnum.IN)) -> checkInDateAm != null
                 ((dateTime == AM) and (check == OutInEnum.OUT)) -> checkOutDateAm != null
@@ -128,7 +128,7 @@ class RealmPersistenceManager(val applicationContext: Context) {
      * TODO add a test
      */
     fun calculateClockOutDate(): Date? {
-        return with(getTodayTimeSchedule(), {
+        return with(getTodayTimeScheduleRealm(), {
             when {
                 checkOutDatePm != null -> checkOutDatePm as Date
                 checkInDatePm != null -> checkInDatePm as Date + (8.hours) - if (checkInDateAm == null) 0.hour
@@ -144,16 +144,16 @@ class RealmPersistenceManager(val applicationContext: Context) {
     /**
      * execute only on certain condition otw return false
      */
-    fun executeTransactionConditionally(isChecked: Boolean, transactionAsync: Realm.Transaction, timeSchedule: TimeSchedule): TimeSchedule?  =
+    fun executeTransactionConditionally(isChecked: Boolean, transactionAsync: Realm.Transaction, timeSchedule: TimeScheduleRealm): TimeScheduleRealm?  =
             if (isChecked) { realm.executeTransaction(transactionAsync); timeSchedule } else null
 
-//    class RealmTransactionDelegate(val realm: Realm, val transaction: Realm.Transaction, val isChecked: Boolean) : ReadWriteProperty<Any?, TimeSchedule?> {
+//    class RealmTransactionDelegate(val realm: Realm, val transaction: Realm.Transaction, val isChecked: Boolean) : ReadWriteProperty<Any?, TimeScheduleRealm?> {
 //
-//        override fun getValue(thisRef: Any?, property: KProperty<*>): TimeSchedule? {
+//        override fun getValue(thisRef: Any?, property: KProperty<*>): TimeScheduleRealm? {
 //            return if (isChecked) { realm.executeTransaction(transaction); property } else null
 //        }
 //
-//        override fun setValue(thisRef: Any?, property: KProperty<*>, value: TimeSchedule?) {
+//        override fun setValue(thisRef: Any?, property: KProperty<*>, value: TimeScheduleRealm?) {
 //
 //        }
 //    }

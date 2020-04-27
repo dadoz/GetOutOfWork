@@ -2,8 +2,8 @@ package com.sample.lmn.davide.getoutofwork.presenters
 
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.models.OutInEnum
-import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
-import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import com.sample.lmn.davide.getoutofwork.models.TimeScheduleRealm
+import com.sample.lmn.davide.getoutofwork.ui.views.TimeScheduleRegisterView
 import khronos.Duration
 import khronos.toString
 import khronos.with
@@ -25,10 +25,10 @@ fun Date.diffHours(date: Date?): Duration {
 /**
  * Created by davide-syn on 7/3/17.
  */
-class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
-                                    val persistenceManager: RealmPersistenceManager) {
+class TimeScheduleRegisterPresenter(private val view: TimeScheduleRegisterView,
+                                    private val persistenceManager: RealmPersistenceManager) {
     init {
-        persistenceManager.initTodayTimeSchedule()
+        persistenceManager.initTodayTimeScheduleRealm()
     }
 
     /**
@@ -44,20 +44,20 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
      */
     private fun showError(check: OutInEnum, dateTime: Int)  = view.showErrorUI(if (dateTime == Calendar.AM) "AM" else "PM" + " - ${check.name}")
 
-    var timeSchedule: TimeSchedule by Delegates.observable(initialValue = persistenceManager.getTodayTimeSchedule(), onChange = {
+    var timeSchedule: TimeScheduleRealm by Delegates.observable(initialValue = persistenceManager.getTodayTimeScheduleRealm(), onChange = {
         property, oldValue, newValue -> onUpdateTimeSchedule(newValue)
     })
     /**
      * init view
      */
     fun initView() {
-        timeSchedule = persistenceManager.getTodayTimeSchedule()
+        timeSchedule = persistenceManager.getTodayTimeScheduleRealm()
     }
 
     /**
      * on update tiem schedule
      */
-    fun onUpdateTimeSchedule(newValue: TimeSchedule) {
+    fun onUpdateTimeSchedule(newValue: TimeScheduleRealm) {
         //set clock time
         view.setClockOutTime(getClockOutDate())
         //update cardview
@@ -66,6 +66,6 @@ class TimeScheduleRegisterPresenter(val view: TimeScheduleRegisterView,
 
     fun getClockOutDate(): Date? = persistenceManager.calculateClockOutDate()
 
-    fun getClockToday(): TimeSchedule = persistenceManager.getTodayTimeSchedule()
+    fun getClockToday(): TimeScheduleRealm = persistenceManager.getTodayTimeScheduleRealm()
 }
 

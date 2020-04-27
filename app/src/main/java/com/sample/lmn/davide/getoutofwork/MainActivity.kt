@@ -5,24 +5,29 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
-import com.sample.lmn.davide.getoutofwork.models.OutInEnum
-import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
-import com.sample.lmn.davide.getoutofwork.presenters.TimeScheduleRegisterPresenter
+import com.sample.lmn.davide.getoutofwork.models.*
 import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
-import com.sample.lmn.davide.getoutofwork.views.TimeScheduleRegisterView
+import com.sample.lmn.davide.getoutofwork.ui.views.TimeScheduleRegisterView
+import com.sample.lmn.davide.getoutofwork.viewModels.RetrieveTimeScheduleViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.time.Instant.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     private val connection: LocalServiceConnection = LocalServiceConnection()
-    private val presenter: TimeScheduleRegisterPresenter by lazy {
-        TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
+    //    private val presenter: TimeScheduleRegisterPresenter by lazy {
+//        TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
+//    }
+    val viewModel: RetrieveTimeScheduleViewModel by lazy {
+        ViewModelProvider(this).get(RetrieveTimeScheduleViewModel::class.java)
     }
-
     private val timeSchedulePersistenceManager by lazy {
         RealmPersistenceManager.Holder(applicationContext).instance
     }
@@ -51,16 +56,57 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      *
      */
     private fun onInitView() {
-        presenter.initView()
-        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
+//        presenter.initView()
 //        historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-        checkCardviewId.setOnClickListener { presenter.setCheck() }
+//        checkCardviewId.setOnClickListener { presenter.setCheck() }
+
+        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
+
+        viewModel.getTimeSchedule()
+
+        viewModel.timeSchedule.observe(this, Observer {
+            list -> Log.e("tag", "blalallallalllal --->" + list.size)
+        })
+
+        timeEnterCardId.apply {
+            setTitle("Get in...")
+            setOnClickListener {
+                viewModel.addTimeSchedule(TimeSchedule(checkType= CheckTypeEnum.START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                        .observe(this@MainActivity, Observer{
+                            res -> Log.e("tag", "blalaal"+res.size)
+                        })
+
+            }
+        }
+
+        timeExitCardId.apply {
+            setTitle("Get out...")
+            setOnClickListener {
+                viewModel.addTimeSchedule(TimeSchedule(checkType = CheckTypeEnum.END.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+            }
+        }
+
+        setLaunchTimeCardId.apply {
+            setTitle("At Launch")
+            setOnClickListener {
+                viewModel.addTimeSchedule(TimeSchedule(checkType= CheckTypeEnum.LAUNCH_START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+            }
+        }
+
+        viewModel.timeSchedule.observe(this@MainActivity, Observer {
+            list ->
+            totHoursCardId.apply {
+                this.setTotHours(list[list.size -1].checkTime)
+                this.setType(CheckTypeEnum.values()[list[list.size -1].checkType])
+            }
+        })
+
     }
 
     /**
      * move in presenter
      */
-    override fun updateCheckCardview(timeSchedule: TimeSchedule) {
+    override fun updateCheckCardview(timeSchedule: TimeScheduleRealm) {
         timeSchedule.apply {
             when {
                 ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.AM)) -> checkCardviewId.setInAmLayout(currentCheckedDate)

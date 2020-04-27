@@ -1,11 +1,10 @@
-package com.sample.lmn.davide.getoutofwork.views
+package com.sample.lmn.davide.getoutofwork.ui.views
 
 import android.content.Context
 import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
-import androidx.cardview.widget.CardView
 import com.google.android.material.card.MaterialCardView
 import com.sample.lmn.davide.getoutofwork.R
 import com.sample.lmn.davide.getoutofwork.presenters.italianFormat

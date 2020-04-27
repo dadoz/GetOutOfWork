@@ -37,8 +37,16 @@ dependencies {
     //date handler
     implementation "com.github.hotchemi:khronos:$khronos_version"
     implementation "com.google.firebase:firebase-analytics:$firebase_version"
-    implementation 'com.google.firebase:firebase-analytics:17.3.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta04'
+    implementation "com.google.firebase:firebase-crashlytics:$firebase_crashlytics_version"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_livedata_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_livedata_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
 
     //junit
     testImplementation 'junit:junit:4.13'
@@ -49,6 +57,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
 }
 repositories {

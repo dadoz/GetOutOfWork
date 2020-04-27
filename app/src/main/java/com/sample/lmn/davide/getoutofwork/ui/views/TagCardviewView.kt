@@ -1,4 +1,4 @@
-package com.sample.lmn.davide.getoutofwork.views
+package com.sample.lmn.davide.getoutofwork.ui.views
 
 import android.content.Context
 import androidx.core.content.ContextCompat

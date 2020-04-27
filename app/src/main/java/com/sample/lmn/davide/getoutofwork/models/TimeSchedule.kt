@@ -1,28 +1,22 @@
 package com.sample.lmn.davide.getoutofwork.models
 
-import io.realm.RealmObject
+import androidx.annotation.NonNull
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
-/**
- * Created by davide-syn on 7/3/17.
- */
-
-enum class OutInEnum {
-    OUT, IN
+enum class CheckTypeEnum {
+    START, END, LAUNCH_START, LAUNCH_END
 }
 
-open class TimeSchedule : RealmObject() {
-    var check: String = OutInEnum.IN.name
-    var dateTime: Int = Calendar.AM //TODO rm it not used anymore
-    var id: Long = -1
-    var date: Date? = null
-    var checkInDateAm: Date? = null
-    var checkOutDateAm: Date? = null
-    var checkInDatePm: Date? = null
-    var checkOutDatePm: Date? = null
-    var currentCheckedDate: Date? = null
+@Entity(tableName = "goow_time_schedule")
+open class TimeSchedule(
+        val checkType: Int = CheckTypeEnum.START.ordinal,
+        val dayTime: Int = Calendar.AM,
+        val checkTime: Date)
+{
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
 
-    fun getCheck(): OutInEnum {
-        return OutInEnum.valueOf(check)
-    }
+    fun getCheck(): CheckTypeEnum = CheckTypeEnum.values()[checkType]
 }
