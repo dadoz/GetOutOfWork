@@ -7,7 +7,7 @@ import android.view.View
 import androidx.annotation.AttrRes
 import com.google.android.material.card.MaterialCardView
 import com.sample.lmn.davide.getoutofwork.R
-import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
+import com.sample.lmn.davide.getoutofwork.italianFormat
 import kotlinx.android.synthetic.main.check_cardview_layout.view.*
 import java.util.*
 

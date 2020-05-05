@@ -6,9 +6,8 @@ import android.view.View
 import androidx.annotation.AttrRes
 import com.google.android.material.card.MaterialCardView
 import com.sample.lmn.davide.getoutofwork.R
-import com.sample.lmn.davide.getoutofwork.models.TimeScheduleRealm
-import com.sample.lmn.davide.getoutofwork.presenters.italianFormat
-import com.sample.lmn.davide.getoutofwork.presenters.timeFormat
+import com.sample.lmn.davide.getoutofwork.italianFormat
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import kotlinx.android.synthetic.main.history_check_cardview_layout.view.*
 import java.util.*
 
@@ -39,12 +38,12 @@ class HistoryCheckCardviewView : MaterialCardView {
 //        checkTimeTitleTextId.text = clockOutDate?.timeFormat()?: " - "
     }
 
-    fun setClockAm(today: TimeScheduleRealm) {
-        historyCheckInDateTextId.text = today.checkInDateAm?.italianFormat()?: context.getString(R.string.no_clock_am)
-        historyCheckOutDateTextId.text = today.checkOutDateAm?.italianFormat()?: context.getString(R.string.no_clock_am)
+    fun setClockAm(today: TimeSchedule) {
+        historyCheckInDateTextId.text = today.toString()//: context.getString(R.string.no_clock_am)
+        historyCheckOutDateTextId.text = today.toString()//: context.getString(R.string.no_clock_am)
     }
 
-    fun init(clockOutDate: Date?, clockToday: TimeScheduleRealm) {
+    fun init(clockOutDate: Date?, clockToday: TimeSchedule) {
         setClockOutTime(clockOutDate)
         setClockAm(clockToday)
     }

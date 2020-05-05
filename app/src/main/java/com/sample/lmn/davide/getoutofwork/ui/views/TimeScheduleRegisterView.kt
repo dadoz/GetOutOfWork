@@ -1,6 +1,6 @@
 package com.sample.lmn.davide.getoutofwork.ui.views
 
-import com.sample.lmn.davide.getoutofwork.models.TimeScheduleRealm
+import com.sample.lmn.davide.getoutofwork.models.TimeSchedule
 import java.util.*
 
 /**
@@ -13,5 +13,5 @@ interface TimeScheduleRegisterView {
 //    fun setUICheckOutPm(date: Date)
     fun setClockOutTime(date: Date?)
     fun showErrorUI(message: String)
-    fun updateCheckCardview(timeSchedule : TimeScheduleRealm)
+    fun updateCheckCardview(timeSchedule : TimeSchedule)
 }

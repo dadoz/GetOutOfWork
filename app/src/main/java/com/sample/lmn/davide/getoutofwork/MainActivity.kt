@@ -10,12 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import com.sample.lmn.davide.getoutofwork.managers.RealmPersistenceManager
 import com.sample.lmn.davide.getoutofwork.models.*
-import com.sample.lmn.davide.getoutofwork.presenters.isAm
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.ui.views.TimeScheduleRegisterView
 import com.sample.lmn.davide.getoutofwork.viewModels.RetrieveTimeScheduleViewModel
+import khronos.Duration
+import khronos.toString
+import khronos.with
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.Instant.*
 import java.util.*
@@ -27,9 +28,6 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
 //    }
     val viewModel: RetrieveTimeScheduleViewModel by lazy {
         ViewModelProvider(this).get(RetrieveTimeScheduleViewModel::class.java)
-    }
-    private val timeSchedulePersistenceManager by lazy {
-        RealmPersistenceManager.Holder(applicationContext).instance
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,20 +108,6 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     }
 
     /**
-     * move in presenter
-     */
-    override fun updateCheckCardview(timeSchedule: TimeScheduleRealm) {
-        timeSchedule.apply {
-            when {
-                ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.AM)) -> checkCardviewId.setInAmLayout(currentCheckedDate)
-                ((getCheck() == OutInEnum.OUT) and (dateTime == Calendar.AM)) -> checkCardviewId.setOutAmLayout(currentCheckedDate)
-                ((getCheck() == OutInEnum.IN) and (dateTime == Calendar.PM)) -> checkCardviewId.setInPmLayout(currentCheckedDate)
-                ((getCheck() == OutInEnum.OUT) and (dateTime == Calendar.PM)) -> checkCardviewId.setOutPmLayout(currentCheckedDate)
-            }
-        }
-    }
-
-    /**
      * set clock out time
      */
     override fun setClockOutTime(date: Date?) {
@@ -136,6 +120,10 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     override fun showErrorUI(message: String) {
         Snackbar.make(mainViewLayoutId,
                 "${getString(R.string.generic_error)} at $message", Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun updateCheckCardview(timeSchedule: TimeSchedule) {
+        TODO("Not yet implemented")
     }
 
     /**
@@ -152,4 +140,16 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
+}
+
+/**
+ * Date extensions
+ */
+fun Date.isAm(): Boolean = this.before(this.with(hour = 12))
+fun Date.isPm(): Boolean = this.equals(this.with(hour = 12)) || this.after(this.with(hour = 12))
+fun Date.italianFormat(): String = this.toString("HH:mm dd MMM")
+fun Date.timeFormat(): String = this.toString("HH:mm")
+fun Date.diffHours(date: Date?): Duration {
+    val diff : Int = if (date != null) ((date.time - this.time) / (1000 * 60 * 60)).toInt() else 0
+    return Duration(Calendar.HOUR_OF_DAY, diff + 1)
 }
