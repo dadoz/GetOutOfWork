@@ -19,7 +19,8 @@ class TimeScheduleService {
     }
 
     fun addTimeSchedule(timeSchedule: TimeSchedule) {
-        firebaseReference.child("time_schedule").apply {
+        val userId = timeSchedule.userId ?: "-1"
+        firebaseReference.child("time_schedule").child(userId).apply {
             push().key?.let {
                 timeSchedule.id = it
                 this.child(it).setValue(timeSchedule)

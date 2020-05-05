@@ -1,6 +1,5 @@
 package com.sample.lmn.davide.getoutofwork.models
 
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
@@ -11,9 +10,11 @@ enum class CheckTypeEnum {
 
 @Entity(tableName = "goow_time_schedule")
 open class TimeSchedule(
+        val userId: String?,
         val checkType: Int = CheckTypeEnum.START.ordinal,
         val dayTime: Int = Calendar.AM,
-        val checkTime: Date)
+        val checkTime: Date
+)
 {
     @PrimaryKey
     var id: String = "-1"

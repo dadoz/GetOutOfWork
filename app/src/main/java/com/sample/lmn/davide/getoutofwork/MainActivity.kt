@@ -6,10 +6,14 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.sample.lmn.davide.getoutofwork.models.*
 import com.sample.lmn.davide.getoutofwork.services.RealTimeBackgroundService
 import com.sample.lmn.davide.getoutofwork.ui.views.TimeScheduleRegisterView
@@ -18,14 +22,15 @@ import khronos.Duration
 import khronos.toString
 import khronos.with
 import kotlinx.android.synthetic.main.activity_main.*
-import java.time.Instant.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
     private val connection: LocalServiceConnection = LocalServiceConnection()
-    //    private val presenter: TimeScheduleRegisterPresenter by lazy {
-//        TimeScheduleRegisterPresenter(this, timeSchedulePersistenceManager)
-//    }
+    private val auth: FirebaseAuth by lazy {
+        Firebase.auth
+    }
+
+
     val viewModel: RetrieveTimeScheduleViewModel by lazy {
         ViewModelProvider(this).get(RetrieveTimeScheduleViewModel::class.java)
     }
@@ -54,14 +59,14 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
      *
      */
     private fun onInitView() {
-//        presenter.initView()
-//        historyCheckCardviewId.init(presenter.getClockOutDate(), presenter.getClockToday())
-//        checkCardviewId.setOnClickListener { presenter.setCheck() }
+        dateTimeLabelId.text = (if (Date().isAm()) "Morning" else "Afternoon" )
 
-        dateTimeLabelId.text = if (Date().isAm()) "Morning" else "Afternoon"
+        //logging or retreive info from firebase
+        auth.currentUser?.let {
+            dateTimeLabelId.text = it.uid
+        } ?: singIn("bla@hotmail.it", "blabla")
 
         viewModel.getTimeSchedule()
-
         viewModel.timeSchedule.observe(this, Observer {
             list -> Log.e("tag", "blalallallalllal --->" + list.size)
         })
@@ -69,7 +74,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         timeEnterCardId.apply {
             setTitle("Get in...")
             setOnClickListener {
-                viewModel.addTimeSchedule(TimeSchedule(checkType= CheckTypeEnum.START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                viewModel.addTimeSchedule(TimeSchedule(userId = auth.currentUser?.uid, checkType= CheckTypeEnum.START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
                         .observe(this@MainActivity, Observer{
                             res -> Log.e("tag", "blalaal"+res.size)
                         })
@@ -80,7 +85,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         timeExitCardId.apply {
             setTitle("Get out...")
             setOnClickListener {
-                viewModel.addTimeSchedule(TimeSchedule(checkType = CheckTypeEnum.END.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                viewModel.addTimeSchedule(TimeSchedule(userId = auth.currentUser?.uid,checkType = CheckTypeEnum.END.ordinal, dayTime = Calendar.AM, checkTime = Date()))
                         .observe(this@MainActivity, Observer{
                             res -> Log.e("tag", "blalaal"+res.size)
                         })
@@ -90,7 +95,7 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         setLaunchTimeCardId.apply {
             setTitle("At Launch")
             setOnClickListener {
-                viewModel.addTimeSchedule(TimeSchedule(checkType= CheckTypeEnum.LAUNCH_START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                viewModel.addTimeSchedule(TimeSchedule(userId = auth.currentUser?.uid, checkType= CheckTypeEnum.LAUNCH_START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
                         .observe(this@MainActivity, Observer{
                             res -> Log.e("tag", "blalaal"+res.size)
                         })
@@ -140,6 +145,22 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
+
+
+    fun singIn(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                auth.currentUser?.let {
+                    dateTimeLabelId.text = it.uid
+                }
+            } else {
+                Log.w("TAG", "createUserWithEmail:failure", task.exception)
+                Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }
 
 /**
