@@ -15,8 +15,8 @@ open class TimeSchedule(
         val dayTime: Int = Calendar.AM,
         val checkTime: Date)
 {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
+    @PrimaryKey
+    var id: String = "-1"
 
     fun getCheck(): CheckTypeEnum = CheckTypeEnum.values()[checkType]
 }

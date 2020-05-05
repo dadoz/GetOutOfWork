@@ -83,6 +83,9 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
             setTitle("Get out...")
             setOnClickListener {
                 viewModel.addTimeSchedule(TimeSchedule(checkType = CheckTypeEnum.END.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                        .observe(this@MainActivity, Observer{
+                            res -> Log.e("tag", "blalaal"+res.size)
+                        })
             }
         }
 
@@ -90,6 +93,9 @@ class MainActivity : AppCompatActivity(), TimeScheduleRegisterView {
             setTitle("At Launch")
             setOnClickListener {
                 viewModel.addTimeSchedule(TimeSchedule(checkType= CheckTypeEnum.LAUNCH_START.ordinal, dayTime = Calendar.AM, checkTime = Date()))
+                        .observe(this@MainActivity, Observer{
+                            res -> Log.e("tag", "blalaal"+res.size)
+                        })
             }
         }
 

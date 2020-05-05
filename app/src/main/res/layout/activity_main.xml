@@ -11,6 +11,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dateTimeLabelId"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -21,7 +22,7 @@
         android:textSize="48sp" />
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="200dp">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,6 +63,7 @@
 
     <com.sample.lmn.davide.getoutofwork.ui.views.CheckCardviewView
         android:id="@+id/checkCardviewId"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
